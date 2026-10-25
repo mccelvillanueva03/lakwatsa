@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+enum TripMode {
+  PLANNING
+  PLANNED
+}
+model Planner {
+  id String @id @default(cuid())
+  email String @unique
+  username String? @unique
+  salt String
+  hash String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sessions PlannerSession[]
+  trips Trip[]
+}
+model PlannerSession {
+  id String @id @default(cuid())
+  plannerId String
+  planner Planner @relation(fields: [plannerId], references: [id], onDelete: Cascade)
+  tokenHash String @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([plannerId])
+}
+model Trip {
+  id String @id @default(cuid())
+  plannerId String
+  planner Planner @relation(fields: [plannerId], references: [id], onDelete: Cascade)
+  title String
+  description String @default("")
+  accessCodeHash String @unique
+  accessCodeVersion Int @default(1)
+  mode TripMode
+  timezone String
+  contributionsEnabled Boolean @default(false)
+  chosenDestinationId String?
+  chosenDateId String?
+  chosenContributionId String?
+  chosenDestination DestinationOption? @relation("ChosenDestination", fields: [chosenDestinationId], references: [id], onDelete: SetNull)
+  chosenDate DateOption? @relation("ChosenDate", fields: [chosenDateId], references: [id], onDelete: SetNull)
+  chosenContribution ContributionOption? @relation("ChosenContribution", fields: [chosenContributionId], references: [id], onDelete: SetNull)
+  finalizedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  members Member[]
+  destinations DestinationOption[] @relation("TripDestinations")
+  dates DateOption[] @relation("TripDates")
+  contributions ContributionOption[] @relation("TripContributions")
+  @@index([plannerId])
+}
+model Member {
+  id String @id @default(cuid())
+  tripId String
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  name String
+  amountPaid Decimal @default(0) @db.Decimal(12,2)
+  destinationVoteId String?
+  dateVoteId String?
+  contributionVoteId String?
+  destinationVote DestinationOption? @relation(fields: [destinationVoteId], references: [id], onDelete: SetNull)
+  dateVote DateOption? @relation(fields: [dateVoteId], references: [id], onDelete: SetNull)
+  contributionVote ContributionOption? @relation(fields: [contributionVoteId], references: [id], onDelete: SetNull)
+  session MemberSession?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tripId, name])
+}
+model MemberSession {
+  id String @id @default(cuid())
+  memberId String @unique
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  tokenHash String @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+model DestinationOption {
+  id String @id @default(cuid())
+  tripId String
+  trip Trip @relation("TripDestinations", fields: [tripId], references: [id], onDelete: Cascade)
+  name String
+  imageUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  votes Member[]
+  chosenBy Trip[] @relation("ChosenDestination")
+  @@unique([tripId, name])
+  @@unique([tripId, id])
+}
+model DateOption {
+  id String @id @default(cuid())
+  tripId String
+  trip Trip @relation("TripDates", fields: [tripId], references: [id], onDelete: Cascade)
+  start DateTime
+  end DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  votes Member[]
+  chosenBy Trip[] @relation("ChosenDate")
+  @@unique([tripId, start, end])
+  @@unique([tripId, id])
+}
+model ContributionOption {
+  id String @id @default(cuid())
+  tripId String
+  trip Trip @relation("TripContributions", fields: [tripId], references: [id], onDelete: Cascade)
+  amount Decimal @db.Decimal(12,2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  votes Member[]
+  chosenBy Trip[] @relation("ChosenContribution")
+  @@unique([tripId, amount])
+  @@unique([tripId, id])
+}
