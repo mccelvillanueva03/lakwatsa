@@ -19,7 +19,7 @@ Configure `.env.local`:
 - `ACCESS_COOKIE_SECRET`: at least 32 random characters. Generate with `openssl rand -hex 32`.
 - `BLOB_READ_WRITE_TOKEN`: token for a **public** Vercel Blob store. Images are public to anyone with their unpredictable URL; avoid sensitive photos. Uploads require this token; other trip features do not.
 - `TEST_DATABASE_URL`: a separate disposable Postgres database for integration tests. Never point this at production.
-
+    
 Prisma CLI does not load `.env.local` automatically. Export `DATABASE_URL` in your shell when running its commands (or use a git-ignored `.env` for Prisma). Next.js loads `.env.local` when running the app.
 
 ```sh
@@ -52,7 +52,7 @@ npm run test:e2e
 Vitest uses `TEST_DATABASE_URL` instead of `DATABASE_URL` when supplied. Playwright's local server uses `DATABASE_URL`. Integration tests clean only their reserved fixture email domains; browser tests create uniquely named fixtures and retain them for inspection. Destroy or reset the disposable database when finished. Do not run against a database containing real users.
 
 Browser acceptance runs at iPhone-sized and desktop Chromium widths. It covers registration, Planning creation, separate member entry and claiming, voting, finalization with explicit unvoted-category decisions, exact payment updates, and direct Planned creation without contributions. Additional checks cover invalid invitations, protected-page access, server-error field retention, and automatic vote refresh. Failure traces and screenshots live under ignored `test-results/`.
-
+ 
 Blob tests replace only the external Blob transport, keeping real database writes, authorization, file validation, and cleanup ordering. A real upload with your Blob token is still needed to verify that store's configuration.
 
 ## Access and data rules
