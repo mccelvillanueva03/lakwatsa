@@ -1,26 +1,17 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { Plus, ArrowUpRight, MapPin, CalendarDays } from "lucide-react";
-import { db } from "@/lib/db";
+import { listTrips } from "@/lib/trips";
 import { requirePlanner } from "@/lib/auth";
 import { dateLabel } from "@/lib/dates";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Prisma } from "@prisma/client";
+import Decimal from "decimal.js";
 async function Dashboard() {
   const planner = await requirePlanner();
-  const trips = await db.trip.findMany({
-    where: { plannerId: planner.id },
-    include: {
-      chosenDate: true,
-      chosenDestination: true,
-      chosenContribution: true,
-      members: true,
-    },
-    orderBy: { updatedAt: "desc" },
-  });
+  const trips=(await listTrips(planner.id)).map(trip=>({...trip,chosenDate:trip.dates.find(d=>d.id===trip.chosenDateId),chosenDestination:trip.destinations.find(d=>d.id===trip.chosenDestinationId),chosenContribution:trip.contributions.find(c=>c.id===trip.chosenContributionId)}));
   return (
     <div className="space-y-9">
       <div className="flex flex-wrap justify-between items-end gap-5">
@@ -62,7 +53,7 @@ async function Dashboard() {
             const total = target?.mul(trip.members.length);
             const paid = trip.members.reduce(
               (sum, m) => sum.plus(m.amountPaid),
-              new Prisma.Decimal(0),
+              new Decimal(0),
             );
             const progress = total?.gt(0)
               ? Math.min(100, paid.div(total).mul(100).toNumber())

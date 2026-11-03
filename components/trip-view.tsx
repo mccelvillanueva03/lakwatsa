@@ -1,5 +1,5 @@
 import { TripRefresh } from "./trip-refresh";
-import { Prisma } from "@prisma/client";
+import Decimal from "decimal.js";
 import { MapPin, CalendarDays, Users, Check } from "lucide-react";
 import type { FullTrip, Category } from "@/lib/trips";
 import { dateLabel } from "@/lib/dates";
@@ -29,7 +29,7 @@ export function TripView({
   const total = target?.mul(trip.members.length);
   const paid = trip.members.reduce(
     (s, m) => s.plus(m.amountPaid),
-    new Prisma.Decimal(0),
+    new Decimal(0),
   );
   const progress = total?.gt(0)
     ? Math.min(100, paid.div(total).mul(100).toNumber())

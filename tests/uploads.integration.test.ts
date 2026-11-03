@@ -9,7 +9,7 @@ const enabled = !!process.env.TEST_DATABASE_URL;
 let token: string, tripId: string, optionId: string;
 beforeAll(async () => {
   if (!enabled) return;
-  await db.planner.deleteMany({ where: { email: "upload@upload.test" } });
+  await db.orm.public.Planner.where({ email: "upload@upload.test" }).deleteAll();
   token = (await register("upload@upload.test", "long enough password")).token;
   const { trip } = await createTrip(token, {
     title: "Images",
@@ -25,7 +25,7 @@ beforeAll(async () => {
   optionId = trip.destinations[0].id;
 });
 afterAll(async () => {
-  await db.$disconnect();
+  await db.close();
 });
 const file = () =>
   new File(
@@ -65,16 +65,11 @@ test.skipIf(!enabled)(
   async () => {
     const old = "https://store.public.blob.vercel-storage.com/old.png",
       fresh = "https://store.public.blob.vercel-storage.com/fresh.png";
-    await db.destinationOption.update({
-      where: { id: optionId },
-      data: { imageUrl: old },
-    });
+    await db.orm.public.DestinationOption.where({ id: optionId }).update({ imageUrl: old });
     storage.put.mockImplementation(async () => {
       expect(
         (
-          await db.destinationOption.findUniqueOrThrow({
-            where: { id: optionId },
-          })
+          await db.orm.public.DestinationOption.where({ id: optionId }).firstOrThrow()
         ).imageUrl,
       ).toBe(old);
       return { url: fresh };
@@ -83,15 +78,13 @@ test.skipIf(!enabled)(
       expect(url).toBe(old);
       expect(
         (
-          await db.destinationOption.findUniqueOrThrow({
-            where: { id: optionId },
-          })
+          await db.orm.public.DestinationOption.where({ id: optionId }).firstOrThrow()
         ).imageUrl,
       ).toBe(fresh);
     });
     await replaceDestinationImage(token, tripId, optionId, file());
     storage.put.mockImplementation(async () => {
-      await db.destinationOption.delete({ where: { id: optionId } });
+      await db.orm.public.DestinationOption.where({ id: optionId }).delete();
       return { url: fresh };
     });
     storage.del.mockReset();
@@ -120,14 +113,11 @@ test.skipIf(!enabled)(
     });
     const option = trip.destinations[0];
     const url = "https://store.public.blob.vercel-storage.com/delete.png";
-    await db.destinationOption.update({
-      where: { id: option.id },
-      data: { imageUrl: url },
-    });
+    await db.orm.public.DestinationOption.where({ id: option.id }).update({ imageUrl: url });
     storage.del.mockReset();
     storage.del.mockImplementation(async () => {
       expect(
-        await db.destinationOption.findUnique({ where: { id: option.id } }),
+        await db.orm.public.DestinationOption.where({ id: option.id }).first(),
       ).toBeNull();
     });
     await mutateOption(token, trip.id, "destination", "delete", {

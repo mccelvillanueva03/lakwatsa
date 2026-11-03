@@ -32,14 +32,12 @@ const input = {
 };
 beforeAll(async () => {
   if (!enabled) return;
-  await db.planner.deleteMany({
-    where: { email: { endsWith: "@trips.test" } },
-  });
+  await db.orm.public.Planner.where((row)=>row.email.like("%@trips.test")).deleteAll();
   token = (await register("owner@trips.test", "long enough password")).token;
   other = (await register("other@trips.test", "long enough password")).token;
 });
 afterAll(async () => {
-  await db.$disconnect();
+  await db.close();
 });
 test.skipIf(!enabled)(
   "creation enforces mode, options, timezone, exact amounts, and ownership",
@@ -126,12 +124,12 @@ test.skipIf(!enabled)(
     await castVote(identity, trip.id, "destination", trip.destinations[0].id);
     await castVote(identity, trip.id, "destination", trip.destinations[1].id);
     expect(
-      (await db.member.findUniqueOrThrow({ where: { id: trip.members[0].id } }))
+      (await db.orm.public.Member.where({ id: trip.members[0].id }).firstOrThrow())
         .destinationVoteId,
     ).toBe(trip.destinations[1].id);
     await expect(finalizeTrip(token, trip.id, {})).rejects.toThrow();
     expect(
-      (await db.trip.findUniqueOrThrow({ where: { id: trip.id } })).mode,
+      (await db.orm.public.Trip.where({ id: trip.id }).firstOrThrow()).mode,
     ).toBe("PLANNING");
     await finalizeTrip(token, trip.id, {
       date: trip.dates[0].id,
@@ -150,11 +148,11 @@ test.skipIf(!enabled)(
     await editTrip(token, trip.id, { contributionsEnabled: false });
     expect(
       (
-        await db.member.findUniqueOrThrow({ where: { id: trip.members[0].id } })
-      ).amountPaid.toFixed(2),
+        await db.orm.public.Member.where({ id: trip.members[0].id }).firstOrThrow()
+      ).amountPaid,
     ).toBe("1200.25");
     expect(
-      (await db.trip.findUniqueOrThrow({ where: { id: trip.id } }))
+      (await db.orm.public.Trip.where({ id: trip.id }).firstOrThrow())
         .chosenContributionId,
     ).toBeNull();
     await expect(
@@ -186,7 +184,7 @@ test.skipIf(!enabled)(
       id: trip.destinations[0].id,
     });
     expect(
-      (await db.member.findUniqueOrThrow({ where: { id: trip.members[0].id } }))
+      (await db.orm.public.Member.where({ id: trip.members[0].id }).firstOrThrow())
         .destinationVoteId,
     ).toBeNull();
     await mutateMember(token, trip.id, "reset", { id: trip.members[0].id });
@@ -210,25 +208,17 @@ test.skipIf(!enabled)(
     const a = await createTrip(token, input),
       b = await createTrip(token, input);
     await expect(
-      db.member.update({
-        where: { id: a.trip.members[0].id },
-        data: { destinationVoteId: b.trip.destinations[0].id },
-      }),
+      db.orm.public.Member.where({ id: a.trip.members[0].id }).update({ destinationVoteId: b.trip.destinations[0].id }),
     ).rejects.toThrow();
     await expect(
-      db.member.update({
-        where: { id: a.trip.members[0].id },
-        data: { amountPaid: -1 },
-      }),
+      db.orm.public.Member.where({ id: a.trip.members[0].id }).update({ amountPaid: "-1" }),
     ).rejects.toThrow();
     await expect(
-      db.dateOption.create({
-        data: {
+      db.orm.public.DateOption.create({
           tripId: a.trip.id,
           start: new Date("2026-12-02"),
           end: new Date("2026-12-01"),
-        },
-      }),
+        }),
     ).rejects.toThrow();
   },
 );
@@ -256,7 +246,7 @@ test.skipIf(!enabled)(
       ),
     ]);
     expect(
-      (await db.trip.findUniqueOrThrow({ where: { id: trip.id } })).mode,
+      (await db.orm.public.Trip.where({ id: trip.id }).firstOrThrow()).mode,
     ).toBe("PLANNED");
     await expect(
       castVote(
@@ -291,7 +281,7 @@ test.skipIf(!enabled)(
       destinationId: trip.destinations[1].id,
       dateId: trip.dates[1].id,
     });
-    const changed = await db.trip.findUniqueOrThrow({ where: { id: trip.id } });
+    const changed = await db.orm.public.Trip.where({ id: trip.id }).firstOrThrow();
     expect(changed.mode).toBe("PLANNED");
     expect(changed.chosenDestinationId).toBe(trip.destinations[1].id);
     expect(changed.chosenDateId).toBe(trip.dates[1].id);

@@ -1,6 +1,7 @@
 import "server-only";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { plannerForToken } from "./auth-service";
 import type { Identity } from "./trips";
 export const cookieOptions = {
@@ -10,6 +11,8 @@ export const cookieOptions = {
   secure: process.env.NODE_ENV === "production",
 };
 export async function plannerToken() {
+  // Prisma v8 generates tracing IDs; keep subsequent queries out of prerendering.
+  await connection();
   return (await cookies()).get("planner_session")?.value;
 }
 export async function requirePlanner() {
@@ -18,6 +21,7 @@ export async function requirePlanner() {
   return planner;
 }
 export async function identity(tripId: string): Promise<Identity> {
+  await connection();
   const jar = await cookies();
   return {
     plannerToken: jar.get("planner_session")?.value,

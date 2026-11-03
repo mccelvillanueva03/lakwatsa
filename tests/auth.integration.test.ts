@@ -10,12 +10,10 @@ import {
 const enabled = !!process.env.TEST_DATABASE_URL;
 beforeAll(async () => {
   if (enabled)
-    await db.planner.deleteMany({
-      where: { email: { endsWith: "@auth.test" } },
-    });
+    await db.orm.public.Planner.where((row)=>row.email.like("%@auth.test")).deleteAll();
 });
 afterAll(async () => {
-  await db.$disconnect();
+  await db.close();
 });
 test.skipIf(!enabled)(
   "registration, identifier login, expiration, logout, password revocation",
@@ -43,10 +41,7 @@ test.skipIf(!enabled)(
     expect((await plannerForToken(current!.token))?.email).toBe(
       "person@auth.test",
     );
-    await db.plannerSession.updateMany({
-      where: { plannerId: first.planner.id },
-      data: { expiresAt: new Date(0) },
-    });
+    await db.orm.public.PlannerSession.where({ plannerId: first.planner.id }).updateAll({ expiresAt: new Date(0) });
     expect(await plannerForToken(current!.token)).toBeNull();
   },
 );

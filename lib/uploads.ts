@@ -43,10 +43,7 @@ export async function replaceDestinationImage(
     old = await withOwnedTrip(token, tripId, async (tx, trip) => {
       const option = trip.destinations.find((d) => d.id === optionId);
       if (!option) throw new UserError("Destination unavailable.");
-      await tx.destinationOption.update({
-        where: { id: optionId },
-        data: { imageUrl: newUrl },
-      });
+      await tx.orm.public.DestinationOption.where({ id: optionId }).update({ imageUrl: newUrl });
       return option.imageUrl;
     });
   } catch (error) {

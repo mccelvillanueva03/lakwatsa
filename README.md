@@ -6,7 +6,7 @@ A planner creates a **Planning** trip with changeable member votes, or a **Plann
 
 ## Run locally
 
-Requires Node.js 22.12+ and a Postgres database (Neon for deployment).
+Requires Node.js 22.18+ (22.x), 24.11+ (24.x), or 26+ and a Postgres database (Neon for deployment).
 
 ```sh
 npm ci
@@ -15,7 +15,7 @@ cp .env.example .env.local
 
 Configure `.env.local`:
 
-- `DATABASE_URL`: Neon Postgres connection string, including `sslmode=require`. A local Postgres URL also works for development.
+- `DATABASE_URL`: your local development Postgres connection string. Use a separate Neon connection string with `sslmode=require` only for production.
 - `ACCESS_COOKIE_SECRET`: at least 32 random characters. Generate with `openssl rand -hex 32`.
 - `BLOB_READ_WRITE_TOKEN`: token for a **public** Vercel Blob store. Images are public to anyone with their unpredictable URL; avoid sensitive photos. Uploads require this token; other trip features do not.
 - `TEST_DATABASE_URL`: a separate disposable Postgres database for integration tests. Never point this at production.
@@ -24,11 +24,38 @@ Prisma CLI does not load `.env.local` automatically. Export `DATABASE_URL` in yo
 
 ```sh
 npm run db:generate
-npm run db:migrate
+npm run db:migrate # empty database only; see adoption below for existing databases
 npm run dev
 ```
 
 Open [localhost:3000](http://localhost:3000). Register with email and a password of at least 12 characters. An optional username can be set on Account. Password recovery and email verification are intentionally outside this MVP.
+
+## Prisma v8 and your three databases
+
+This project uses Prisma CLI **8.0.0-rc.29** and PostgreSQL runtime **8.0.0-rc.22**. These are release candidates. The native contract is `prisma/contract.prisma`; emitted types live in `prisma/generated/`. The legacy schema and SQL migrations are retained as history, not as inputs to v8 commands.
+
+Keep three separate databases: Neon production, local development for trying changes, and a disposable local test database. DBeaver can connect to each for inspection; migrations in Git remain the source of schema changes. Give connections clear names and verify the selected database before executing SQL.
+
+For an **empty** local or test database, set `DATABASE_URL` to that database, then run `npm run db:migrate`. The committed v8 baseline creates the schema, including checks and deferred same-trip foreign keys.
+
+For an **existing database with the original MVP schema and data**, back it up first, then run these commands with `DATABASE_URL` pointing at that database:
+
+```sh
+npm run db:adopt   # verify and sign the existing schema; do not replay table creation
+npm run db:verify
+npm run db:migrate
+```
+
+Adoption records v8 metadata without resetting application tables. It requires the original schema to match the committed contract. If verification fails, investigate the difference before continuing. Do this once per existing database; production adoption is a separate release operation you perform against Neon after validating a backup and the same procedure locally. Neither `db:adopt` nor release `db:migrate` advances the repository's development ref.
+
+For future schema changes:
+
+1. Edit `prisma/contract.prisma` and run `npm run db:generate`.
+2. Run `npm run db:plan -- --name describe_change`, inspect the generated migration, then run `npm run db:dev` against local development.
+3. Commit the contract, emitted artifacts, and `prisma/migrations-v8/` changes together. The local development command advances the tracked `db` ref for the next migration plan.
+4. Apply `npm run db:migrate` to the disposable test database and run all checks. Apply the same committed migrations to Neon as a separate release step before deploying the app.
+
+Prisma v8 currently omits foreign-key deferrability from contract inference. Preserve the six deferred composite foreign keys in future migration changes; the baseline adds explicit SQL operations and integration tests check their settings. `db:verify` alone does not check that omitted property.
 
 ## Checks
 
@@ -79,4 +106,6 @@ No infrastructure is provisioned and no application is published by this reposit
 
 Design: [MVP spec](docs/superpowers/specs/2026-10-23-trip-lang-mvp-design.md). Execution: [implementation plan](docs/superpowers/plans/2026-10-26-trip-lang-mvp.md).
 
-Dependency note: scoped npm overrides update transitive Zod and deepmerge-ts security fixes while retaining Prisma 6. Recheck Prisma generation/migrations and Blob SDK behavior when upgrading these packages.
+Dependency note: the CLI and runtime use independently versioned v8 releases. The `@prisma/orm-toolchain` override aligns their contract-authoring registries at rc.22; without it these releases fail contract inference. Revalidate this override when upgrading either release. The scoped Zod override remains for the Blob dependency tree. `npm run build` emits contract artifacts before compiling; it does not apply migrations.
+
+The current lockfile has no runtime dependency advisories (`npm audit --omit=dev`), but the full audit reports 32 development-tool advisories (24 moderate, 8 high), including Prisma CLI bundled tooling. Compatible audit fixes did not clear these; do not use `npm audit fix --force` to silently downgrade the approved v8 target.

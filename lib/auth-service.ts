@@ -1,6 +1,5 @@
 import "server-only";
-import { Prisma } from "@prisma/client";
-import { db, transaction } from "./db";
+import { db, transaction, type Tx } from "./db";
 import { hashPassword, verifyPassword, newToken, hashToken } from "./crypto";
 import {
   emailSchema,
@@ -11,29 +10,24 @@ import {
 const SESSION_MS = 30 * 86400000;
 export async function plannerForToken(
   token?: string,
-  client: Prisma.TransactionClient = db,
+  client: Pick<Tx, "orm"> = db,
 ) {
   if (!token || token.length > 128) return null;
-  const session = await client.plannerSession.findUnique({
-    where: { tokenHash: hashToken(token) },
-    include: { planner: true },
-  });
-  return session && session.expiresAt > new Date() ? session.planner : null;
+  const session = await client.orm.public.PlannerSession.where({tokenHash:hashToken(token)}).first();
+  return session && session.expiresAt > new Date() ? client.orm.public.Planner.where({id:session.plannerId}).first() : null;
 }
 export async function requirePlannerToken(
   token?: string,
-  client: Prisma.TransactionClient = db,
+  client: Pick<Tx, "orm"> = db,
 ) {
   const planner = await plannerForToken(token, client);
   if (!planner) throw new UserError("Please sign in again.");
   return planner;
 }
-async function sessionFor(plannerId: string, client: Prisma.TransactionClient) {
+async function sessionFor(plannerId: string, client: Pick<Tx, "orm">) {
   const token = newToken();
   const expiresAt = new Date(Date.now() + SESSION_MS);
-  await client.plannerSession.create({
-    data: { plannerId, tokenHash: hashToken(token), expiresAt },
-  });
+  await client.orm.public.PlannerSession.create({ plannerId, tokenHash: hashToken(token), expiresAt });
   return { token, expiresAt };
 }
 export async function register(email: string, password: string) {
@@ -41,9 +35,7 @@ export async function register(email: string, password: string) {
   passwordSchema.parse(password);
   const saved = await hashPassword(password);
   return transaction(async (tx) => {
-    const planner = await tx.planner.create({
-      data: { email: normalized, ...saved },
-    });
+    const planner = await tx.orm.public.Planner.create({ email: normalized, ...saved });
     return { planner, ...(await sessionFor(planner.id, tx)) };
   });
 }
@@ -52,11 +44,9 @@ export async function login(identifier: string, password: string) {
     throw new UserError("Invalid credentials.");
   const normalized = identifier.trim().toLowerCase();
   return transaction(async (tx) => {
-    const planner = await tx.planner.findFirst({
-      where: normalized.includes("@")
+    const planner = await tx.orm.public.Planner.where(normalized.includes("@")
         ? { email: normalized }
-        : { username: normalized },
-    });
+        : { username: normalized }).first();
     // Always derive a hash, including for unknown accounts.
     const valid = await verifyPassword(
       password,
@@ -66,15 +56,13 @@ export async function login(identifier: string, password: string) {
       },
     );
     if (!planner || !valid) throw new UserError("Invalid credentials.");
-    await tx.$queryRaw`SELECT id FROM "Planner" WHERE id = ${planner.id} FOR UPDATE`;
+    await tx.orm.public.Planner.where({id:planner.id}).forUpdate().firstOrThrow();
     return { planner, ...(await sessionFor(planner.id, tx)) };
   });
 }
 export async function logout(token?: string) {
   if (token)
-    await db.plannerSession.deleteMany({
-      where: { tokenHash: hashToken(token) },
-    });
+    await db.orm.public.PlannerSession.where({ tokenHash: hashToken(token) }).deleteAll();
 }
 export async function updateAccount(
   token: string | undefined,
@@ -82,7 +70,7 @@ export async function updateAccount(
 ) {
   return transaction(async (tx) => {
     const planner = await requirePlannerToken(token, tx);
-    await tx.$queryRaw`SELECT id FROM "Planner" WHERE id = ${planner.id} FOR UPDATE`;
+    await tx.orm.public.Planner.where({id:planner.id}).forUpdate().firstOrThrow();
     if (input.password !== undefined) {
       passwordSchema.parse(input.password);
       if (
@@ -94,14 +82,14 @@ export async function updateAccount(
           "currentPassword",
         );
       const saved = await hashPassword(input.password);
-      await tx.planner.update({ where: { id: planner.id }, data: saved });
-      await tx.plannerSession.deleteMany({ where: { plannerId: planner.id } });
+      await tx.orm.public.Planner.where({ id: planner.id }).update(saved);
+      await tx.orm.public.PlannerSession.where({ plannerId: planner.id }).deleteAll();
       return sessionFor(planner.id, tx);
     }
     const username = input.username?.trim()
       ? usernameSchema.parse(input.username)
       : null;
-    await tx.planner.update({ where: { id: planner.id }, data: { username } });
+    await tx.orm.public.Planner.where({ id: planner.id }).update({ username });
     return null;
   });
 }

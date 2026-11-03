@@ -1,6 +1,6 @@
 import "server-only";
 import { ZodError } from "zod";
-import { Prisma } from "@prisma/client";
+import { postgresState } from "./db-errors";
 import { UserError } from "./validation";
 import type { FormState } from "./form-state";
 export function actionError(error: unknown): FormState {
@@ -18,8 +18,7 @@ export function actionError(error: unknown): FormState {
     return { errors, message: "Please check the highlighted fields." };
   }
   if (
-    error instanceof Prisma.PrismaClientKnownRequestError &&
-    error.code === "P2002"
+    postgresState(error) === "23505"
   )
     return {
       errors: { form: ["That name, account, or option already exists."] },

@@ -1,29 +1,26 @@
-import "server-only";
-import { PrismaClient, Prisma } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-const globalDb = globalThis as unknown as { tripDb?: PrismaClient };
-export const db =
-  globalDb.tripDb ??
-  new PrismaClient({
-    adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
-  });
-if (process.env.NODE_ENV !== "production") globalDb.tripDb = db;
-export async function transaction<T>(
-  work: (tx: Prisma.TransactionClient) => Promise<T>,
-): Promise<T> {
-  for (let attempt = 0; ; attempt++) {
-    try {
-      return await db.$transaction(work, {
-        isolationLevel: "Serializable",
-        timeout: 15000,
-      });
-    } catch (error) {
-      if (
-        !(error instanceof Prisma.PrismaClientKnownRequestError) ||
-        error.code !== "P2034" ||
-        attempt >= 3
-      )
-        throw error;
-    }
-  }
+import 'server-only';
+import postgres from '@prisma/orm-postgres/runtime';
+import { contractFromJson } from '@prisma/orm-postgres/static';
+import type { Contract } from '../prisma/generated/contract.d';
+import contractJson from '../prisma/generated/contract.json' with { type: 'json' };
+import { postgresState } from './db-errors';
+const contract=contractFromJson<Contract>(contractJson);
+const createDb=()=>postgres({contract,url:process.env.DATABASE_URL});
+const globalDb=globalThis as unknown as {tripDbV8?:ReturnType<typeof createDb>};
+export const db=globalDb.tripDbV8??createDb();
+if(process.env.NODE_ENV!=='production')globalDb.tripDbV8=db;
+// Resolve native-enum/contract metadata outside BEGIN; otherwise v8 can query
+// before SET TRANSACTION and PostgreSQL refuses the isolation change.
+let metadataReady: Promise<unknown> | undefined;
+function prepareMetadata() { return metadataReady ??= Promise.resolve(db.orm.public.Planner.limit(0).all()).catch(error=>{ metadataReady=undefined;throw error; }); }
+export type Tx=Parameters<Parameters<typeof db.transaction>[0]>[0];
+export async function transaction<T>(work:(tx:Tx)=>Promise<T>):Promise<T>{
+ for(let attempt=0;;attempt++){
+  try{await prepareMetadata(); return await db.transaction(async tx=>{
+   await tx.execute(tx.raw.sql`SET TRANSACTION ISOLATION LEVEL SERIALIZABLE`.affectedCount().build());
+   await tx.execute(tx.raw.sql`SET LOCAL statement_timeout = '15s'`.affectedCount().build());
+   await tx.execute(tx.raw.sql`SET LOCAL idle_in_transaction_session_timeout = '15s'`.affectedCount().build());
+   return work(tx);
+  });}catch(error){if(!['40001','40P01'].includes(postgresState(error)||'')||attempt>=3)throw error;}
+ }
 }

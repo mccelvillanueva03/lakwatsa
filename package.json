@@ -9,17 +9,23 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate deploy",
-    "typecheck": "tsc --noEmit"
+    "db:generate": "prisma contract emit",
+    "db:migrate": "prisma db migrate --to @contract",
+    "typecheck": "tsc --noEmit",
+    "db:adopt": "prisma db sign --no-advance-ref",
+    "db:plan": "prisma migration plan",
+    "db:dev": "prisma db migrate --to @contract --advance-ref db",
+    "db:verify": "prisma db verify --strict",
+    "prebuild": "npm run db:generate"
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.5.1",
-    "@prisma/adapter-pg": "^6.19.3",
-    "@prisma/client": "^6.19.3",
+    "@prisma/orm-postgres": "8.0.0-rc.22",
     "@vercel/blob": "^2.8.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "decimal.js": "10.6.0",
+    "dotenv": "18.0.9",
     "lucide-react": "^1.61.0",
     "next": "16.4.2",
     "pg": "^8.23.1",
@@ -39,17 +45,18 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
-    "prisma": "^6.19.3",
+    "prisma": "8.0.0-rc.29",
     "tailwindcss": "^4",
-    "typescript": "^5",
+    "typescript": "5.9.3",
     "vitest": "^5.0.5"
   },
   "overrides": {
     "@vercel/cli-config": {
       "zod": "^4.6.7"
     },
-    "@prisma/config": {
-      "deepmerge-ts": "^8.0.0"
-    }
+    "@prisma/orm-toolchain": "8.0.0-rc.22"
+  },
+  "engines": {
+    "node": ">=22.18.0 <23 || >=24.11.0 <25 || >=26"
   }
 }
