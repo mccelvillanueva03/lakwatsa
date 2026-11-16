@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { leaders, chooseWinner } from "../lib/voting";
+import { leaders, chooseWinner } from "../src/lib/voting";
 test("unique winners select automatically, ties require tied choices, no votes require a choice", () => {
   expect(leaders(["a", "b"], ["a", "a", "b"])).toEqual(["a"]);
   expect(chooseWinner(["a", "b"], ["a", "a", "b"])).toBe("a");

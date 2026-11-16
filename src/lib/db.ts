@@ -1,8 +1,8 @@
 import 'server-only';
 import postgres from '@prisma/orm-postgres/runtime';
 import { contractFromJson } from '@prisma/orm-postgres/static';
-import type { Contract } from '../prisma/generated/contract.d';
-import contractJson from '../prisma/generated/contract.json' with { type: 'json' };
+import type { Contract } from '../../prisma/generated/contract.d';
+import contractJson from '../../prisma/generated/contract.json' with { type: 'json' };
 import { postgresState } from './db-errors';
 const contract=contractFromJson<Contract>(contractJson);
 const createDb=()=>postgres({contract,url:process.env.DATABASE_URL});

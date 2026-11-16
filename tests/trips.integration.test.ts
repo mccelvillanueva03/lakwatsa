@@ -1,6 +1,6 @@
 import { beforeAll, afterAll, expect, test } from "vitest";
-import { db } from "../lib/db";
-import { register } from "../lib/auth-service";
+import { db } from "../src/lib/db";
+import { register } from "../src/lib/auth-service";
 import {
   createTrip,
   editTrip,
@@ -13,7 +13,7 @@ import {
   finalizeTrip,
   setPayment,
   readTrip,
-} from "../lib/trips";
+} from "../src/lib/trips";
 const enabled = !!process.env.TEST_DATABASE_URL;
 let token: string, other: string;
 const input = {

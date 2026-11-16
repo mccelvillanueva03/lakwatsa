@@ -6,7 +6,7 @@ import {
   newToken,
   signAccess,
   verifyAccess,
-} from "../lib/crypto";
+} from "../src/lib/crypto";
 test("salts scrypt passwords and rejects incorrect passwords", async () => {
   const first = await hashPassword("long enough password");
   const second = await hashPassword("long enough password");

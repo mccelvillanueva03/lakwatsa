@@ -1,5 +1,5 @@
 import { afterAll, expect, test } from 'vitest';
-import { db, transaction } from '../lib/db';
+import { db, transaction } from '../src/lib/db';
 const enabled=!!process.env.TEST_DATABASE_URL;
 afterAll(async()=>{await db.close();});
 test.skipIf(!enabled)('v8 transactions run serializable and roll back failed writes',async()=>{

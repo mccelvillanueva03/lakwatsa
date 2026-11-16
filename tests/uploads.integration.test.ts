@@ -1,10 +1,10 @@
 import { beforeAll, afterAll, test, expect, vi } from "vitest";
 const storage = vi.hoisted(() => ({ put: vi.fn(), del: vi.fn() }));
 vi.mock("@vercel/blob", () => storage);
-import { db } from "../lib/db";
-import { register } from "../lib/auth-service";
-import { createTrip, mutateOption } from "../lib/trips";
-import { replaceDestinationImage } from "../lib/uploads";
+import { db } from "../src/lib/db";
+import { register } from "../src/lib/auth-service";
+import { createTrip, mutateOption } from "../src/lib/trips";
+import { replaceDestinationImage } from "../src/lib/uploads";
 const enabled = !!process.env.TEST_DATABASE_URL;
 let token: string, tripId: string, optionId: string;
 beforeAll(async () => {

@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { parseMoney, remaining } from "../lib/money";
+import { parseMoney, remaining } from "../src/lib/money";
 test("keeps fractional payments exact and clamps overpayment balances", () => {
   expect(parseMoney("0.10").plus(parseMoney("0.20")).toFixed(2)).toBe("0.30");
   expect(remaining(parseMoney("10"), parseMoney("12")).toFixed(2)).toBe("0.00");

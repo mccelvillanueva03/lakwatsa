@@ -1,12 +1,12 @@
 import { beforeAll, afterAll, expect, test } from "vitest";
-import { db } from "../lib/db";
+import { db } from "../src/lib/db";
 import {
   register,
   login,
   logout,
   plannerForToken,
   updateAccount,
-} from "../lib/auth-service";
+} from "../src/lib/auth-service";
 const enabled = !!process.env.TEST_DATABASE_URL;
 beforeAll(async () => {
   if (enabled)
