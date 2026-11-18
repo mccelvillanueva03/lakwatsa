@@ -1,0 +1,2428 @@
+{
+  "schemaVersion": "1",
+  "targetFamily": "sql",
+  "target": "postgres",
+  "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
+  "roots": {
+    "ContributionOption": {
+      "model": "ContributionOption",
+      "namespace": "public"
+    },
+    "DateOption": {
+      "model": "DateOption",
+      "namespace": "public"
+    },
+    "DestinationOption": {
+      "model": "DestinationOption",
+      "namespace": "public"
+    },
+    "Member": {
+      "model": "Member",
+      "namespace": "public"
+    },
+    "MemberSession": {
+      "model": "MemberSession",
+      "namespace": "public"
+    },
+    "Planner": {
+      "model": "Planner",
+      "namespace": "public"
+    },
+    "PlannerSession": {
+      "model": "PlannerSession",
+      "namespace": "public"
+    },
+    "Trip": {
+      "model": "Trip",
+      "namespace": "public"
+    }
+  },
+  "domain": {
+    "namespaces": {
+      "public": {
+        "models": {
+          "ContributionOption": {
+            "fields": {
+              "amount": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 12,
+                    "scale": 2
+                  }
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "tripId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              }
+            },
+            "relations": {
+              "members": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["contributionVoteId"]
+                },
+                "to": {
+                  "model": "Member",
+                  "namespace": "public"
+                }
+              },
+              "membersMember": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["tripId", "contributionVoteId"]
+                },
+                "to": {
+                  "model": "Member",
+                  "namespace": "public"
+                }
+              },
+              "trip": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": ["tripId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "Trip",
+                  "namespace": "public"
+                }
+              },
+              "trips": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["chosenContributionId"]
+                },
+                "to": {
+                  "model": "Trip",
+                  "namespace": "public"
+                }
+              },
+              "tripsTrip": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["id", "chosenContributionId"]
+                },
+                "to": {
+                  "model": "Trip",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "amount": {
+                  "column": "amount"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "tripId": {
+                  "column": "tripId"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "ContributionOption"
+            }
+          },
+          "DateOption": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "end": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "start": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "tripId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              }
+            },
+            "relations": {
+              "members": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["dateVoteId"]
+                },
+                "to": {
+                  "model": "Member",
+                  "namespace": "public"
+                }
+              },
+              "membersMember": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["tripId", "dateVoteId"]
+                },
+                "to": {
+                  "model": "Member",
+                  "namespace": "public"
+                }
+              },
+              "trip": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": ["tripId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "Trip",
+                  "namespace": "public"
+                }
+              },
+              "trips": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["chosenDateId"]
+                },
+                "to": {
+                  "model": "Trip",
+                  "namespace": "public"
+                }
+              },
+              "tripsTrip": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["id", "chosenDateId"]
+                },
+                "to": {
+                  "model": "Trip",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "end": {
+                  "column": "end"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "start": {
+                  "column": "start"
+                },
+                "tripId": {
+                  "column": "tripId"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "DateOption"
+            }
+          },
+          "DestinationOption": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "imageUrl": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "tripId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              }
+            },
+            "relations": {
+              "members": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["destinationVoteId"]
+                },
+                "to": {
+                  "model": "Member",
+                  "namespace": "public"
+                }
+              },
+              "membersMember": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["tripId", "destinationVoteId"]
+                },
+                "to": {
+                  "model": "Member",
+                  "namespace": "public"
+                }
+              },
+              "trip": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": ["tripId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "Trip",
+                  "namespace": "public"
+                }
+              },
+              "trips": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["chosenDestinationId"]
+                },
+                "to": {
+                  "model": "Trip",
+                  "namespace": "public"
+                }
+              },
+              "tripsTrip": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["id", "chosenDestinationId"]
+                },
+                "to": {
+                  "model": "Trip",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "imageUrl": {
+                  "column": "imageUrl"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "tripId": {
+                  "column": "tripId"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "DestinationOption"
+            }
+          },
+          "Member": {
+            "fields": {
+              "amountPaid": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 12,
+                    "scale": 2
+                  }
+                }
+              },
+              "contributionVoteId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "dateVoteId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "destinationVoteId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "tripId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              }
+            },
+            "relations": {
+              "contributionOption": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["tripId", "contributionVoteId"],
+                  "targetFields": ["tripId", "id"]
+                },
+                "to": {
+                  "model": "ContributionOption",
+                  "namespace": "public"
+                }
+              },
+              "contributionVote": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["contributionVoteId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "ContributionOption",
+                  "namespace": "public"
+                }
+              },
+              "dateOption": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["tripId", "dateVoteId"],
+                  "targetFields": ["tripId", "id"]
+                },
+                "to": {
+                  "model": "DateOption",
+                  "namespace": "public"
+                }
+              },
+              "dateVote": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["dateVoteId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "DateOption",
+                  "namespace": "public"
+                }
+              },
+              "destinationOption": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["tripId", "destinationVoteId"],
+                  "targetFields": ["tripId", "id"]
+                },
+                "to": {
+                  "model": "DestinationOption",
+                  "namespace": "public"
+                }
+              },
+              "destinationVote": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["destinationVoteId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "DestinationOption",
+                  "namespace": "public"
+                }
+              },
+              "memberSession": {
+                "cardinality": "1:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["memberId"]
+                },
+                "to": {
+                  "model": "MemberSession",
+                  "namespace": "public"
+                }
+              },
+              "trip": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": ["tripId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "Trip",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "amountPaid": {
+                  "column": "amountPaid"
+                },
+                "contributionVoteId": {
+                  "column": "contributionVoteId"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "dateVoteId": {
+                  "column": "dateVoteId"
+                },
+                "destinationVoteId": {
+                  "column": "destinationVoteId"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "tripId": {
+                  "column": "tripId"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "Member"
+            }
+          },
+          "MemberSession": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "expiresAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "memberId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "tokenHash": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "member": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": ["memberId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "Member",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "expiresAt": {
+                  "column": "expiresAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "memberId": {
+                  "column": "memberId"
+                },
+                "tokenHash": {
+                  "column": "tokenHash"
+                }
+              },
+              "namespaceId": "public",
+              "table": "MemberSession"
+            }
+          },
+          "Planner": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "email": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "hash": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "salt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "username": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "plannerSessions": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["plannerId"]
+                },
+                "to": {
+                  "model": "PlannerSession",
+                  "namespace": "public"
+                }
+              },
+              "trips": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["plannerId"]
+                },
+                "to": {
+                  "model": "Trip",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "email": {
+                  "column": "email"
+                },
+                "hash": {
+                  "column": "hash"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "salt": {
+                  "column": "salt"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                },
+                "username": {
+                  "column": "username"
+                }
+              },
+              "namespaceId": "public",
+              "table": "Planner"
+            }
+          },
+          "PlannerSession": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "expiresAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "plannerId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "tokenHash": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "planner": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": ["plannerId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "Planner",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "expiresAt": {
+                  "column": "expiresAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "plannerId": {
+                  "column": "plannerId"
+                },
+                "tokenHash": {
+                  "column": "tokenHash"
+                }
+              },
+              "namespaceId": "public",
+              "table": "PlannerSession"
+            }
+          },
+          "Trip": {
+            "fields": {
+              "accessCodeEncrypted": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "accessCodeHash": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "accessCodeVersion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "chosenContributionId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "chosenDateId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "chosenDestinationId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "contributionsEnabled": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "description": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "finalizedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "mode": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/enum@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "typeName": "TripMode"
+                  }
+                }
+              },
+              "plannerId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "timezone": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "title": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              }
+            },
+            "relations": {
+              "chosenContribution": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["chosenContributionId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "ContributionOption",
+                  "namespace": "public"
+                }
+              },
+              "chosenDate": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["chosenDateId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "DateOption",
+                  "namespace": "public"
+                }
+              },
+              "chosenDestination": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["chosenDestinationId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "DestinationOption",
+                  "namespace": "public"
+                }
+              },
+              "contributionOption": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["id", "chosenContributionId"],
+                  "targetFields": ["tripId", "id"]
+                },
+                "to": {
+                  "model": "ContributionOption",
+                  "namespace": "public"
+                }
+              },
+              "contributionOptions": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["tripId"]
+                },
+                "to": {
+                  "model": "ContributionOption",
+                  "namespace": "public"
+                }
+              },
+              "dateOption": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["id", "chosenDateId"],
+                  "targetFields": ["tripId", "id"]
+                },
+                "to": {
+                  "model": "DateOption",
+                  "namespace": "public"
+                }
+              },
+              "dateOptions": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["tripId"]
+                },
+                "to": {
+                  "model": "DateOption",
+                  "namespace": "public"
+                }
+              },
+              "destinationOption": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": ["id", "chosenDestinationId"],
+                  "targetFields": ["tripId", "id"]
+                },
+                "to": {
+                  "model": "DestinationOption",
+                  "namespace": "public"
+                }
+              },
+              "destinationOptions": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["tripId"]
+                },
+                "to": {
+                  "model": "DestinationOption",
+                  "namespace": "public"
+                }
+              },
+              "members": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": ["id"],
+                  "targetFields": ["tripId"]
+                },
+                "to": {
+                  "model": "Member",
+                  "namespace": "public"
+                }
+              },
+              "planner": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": ["plannerId"],
+                  "targetFields": ["id"]
+                },
+                "to": {
+                  "model": "Planner",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "accessCodeEncrypted": {
+                  "column": "accessCodeEncrypted"
+                },
+                "accessCodeHash": {
+                  "column": "accessCodeHash"
+                },
+                "accessCodeVersion": {
+                  "column": "accessCodeVersion"
+                },
+                "chosenContributionId": {
+                  "column": "chosenContributionId"
+                },
+                "chosenDateId": {
+                  "column": "chosenDateId"
+                },
+                "chosenDestinationId": {
+                  "column": "chosenDestinationId"
+                },
+                "contributionsEnabled": {
+                  "column": "contributionsEnabled"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "description": {
+                  "column": "description"
+                },
+                "finalizedAt": {
+                  "column": "finalizedAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "mode": {
+                  "column": "mode"
+                },
+                "plannerId": {
+                  "column": "plannerId"
+                },
+                "timezone": {
+                  "column": "timezone"
+                },
+                "title": {
+                  "column": "title"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "Trip"
+            }
+          }
+        }
+      }
+    }
+  },
+  "storage": {
+    "namespaces": {
+      "public": {
+        "entries": {
+          "native_enum": {
+            "TripMode": {
+              "kind": "postgres-enum",
+              "members": ["PLANNING", "PLANNED"],
+              "typeName": "TripMode"
+            }
+          },
+          "table": {
+            "ContributionOption": {
+              "checks": [
+                {
+                  "expression": "(amount > (0)::numeric)",
+                  "name": "ContributionOption_amount_positive"
+                }
+              ],
+              "columns": {
+                "amount": {
+                  "codecId": "pg/numeric@1",
+                  "dataType": "pg/numeric",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 12,
+                    "scale": 2
+                  }
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "tripId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "ContributionOption_tripId_amount_key"
+                  },
+                  "name": "ContributionOption_tripId_fkey",
+                  "onDelete": "cascade",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["tripId"],
+                    "namespaceId": "public",
+                    "tableName": "ContributionOption"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "Trip"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": ["tripId", "amount"],
+                  "name": "ContributionOption_tripId_amount_key",
+                  "unique": true
+                },
+                {
+                  "columns": ["tripId", "id"],
+                  "name": "ContributionOption_tripId_id_key",
+                  "unique": true
+                }
+              ],
+              "primaryKey": {
+                "columns": ["id"],
+                "name": "ContributionOption_pkey"
+              },
+              "uniques": []
+            },
+            "DateOption": {
+              "checks": [
+                {
+                  "expression": "(\"end\" > start)",
+                  "name": "DateOption_valid_window"
+                }
+              ],
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "end": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "start": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "tripId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "DateOption_tripId_id_key"
+                  },
+                  "name": "DateOption_tripId_fkey",
+                  "onDelete": "cascade",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["tripId"],
+                    "namespaceId": "public",
+                    "tableName": "DateOption"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "Trip"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": ["tripId", "id"],
+                  "name": "DateOption_tripId_id_key",
+                  "unique": true
+                },
+                {
+                  "columns": ["tripId", "start", "end"],
+                  "name": "DateOption_tripId_start_end_key",
+                  "unique": true
+                }
+              ],
+              "primaryKey": {
+                "columns": ["id"],
+                "name": "DateOption_pkey"
+              },
+              "uniques": []
+            },
+            "DestinationOption": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "imageUrl": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "tripId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "DestinationOption_tripId_id_key"
+                  },
+                  "name": "DestinationOption_tripId_fkey",
+                  "onDelete": "cascade",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["tripId"],
+                    "namespaceId": "public",
+                    "tableName": "DestinationOption"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "Trip"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": ["tripId", "id"],
+                  "name": "DestinationOption_tripId_id_key",
+                  "unique": true
+                },
+                {
+                  "columns": ["tripId", "name"],
+                  "name": "DestinationOption_tripId_name_key",
+                  "unique": true
+                }
+              ],
+              "primaryKey": {
+                "columns": ["id"],
+                "name": "DestinationOption_pkey"
+              },
+              "uniques": []
+            },
+            "Member": {
+              "checks": [
+                {
+                  "expression": "(\"amountPaid\" >= (0)::numeric)",
+                  "name": "Member_amountPaid_nonnegative"
+                }
+              ],
+              "columns": {
+                "amountPaid": {
+                  "codecId": "pg/numeric@1",
+                  "dataType": "pg/numeric",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0.00"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 12,
+                    "scale": 2
+                  }
+                },
+                "contributionVoteId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "dateVoteId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "destinationVoteId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "tripId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "name": "Member_contributionVoteId_fkey",
+                  "onDelete": "setNull",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["contributionVoteId"],
+                    "namespaceId": "public",
+                    "tableName": "Member"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "ContributionOption"
+                  }
+                },
+                {
+                  "name": "Member_contribution_same_trip",
+                  "source": {
+                    "columns": ["tripId", "contributionVoteId"],
+                    "namespaceId": "public",
+                    "tableName": "Member"
+                  },
+                  "target": {
+                    "columns": ["tripId", "id"],
+                    "namespaceId": "public",
+                    "tableName": "ContributionOption"
+                  }
+                },
+                {
+                  "name": "Member_dateVoteId_fkey",
+                  "onDelete": "setNull",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["dateVoteId"],
+                    "namespaceId": "public",
+                    "tableName": "Member"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "DateOption"
+                  }
+                },
+                {
+                  "name": "Member_date_same_trip",
+                  "source": {
+                    "columns": ["tripId", "dateVoteId"],
+                    "namespaceId": "public",
+                    "tableName": "Member"
+                  },
+                  "target": {
+                    "columns": ["tripId", "id"],
+                    "namespaceId": "public",
+                    "tableName": "DateOption"
+                  }
+                },
+                {
+                  "name": "Member_destinationVoteId_fkey",
+                  "onDelete": "setNull",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["destinationVoteId"],
+                    "namespaceId": "public",
+                    "tableName": "Member"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "DestinationOption"
+                  }
+                },
+                {
+                  "name": "Member_destination_same_trip",
+                  "source": {
+                    "columns": ["tripId", "destinationVoteId"],
+                    "namespaceId": "public",
+                    "tableName": "Member"
+                  },
+                  "target": {
+                    "columns": ["tripId", "id"],
+                    "namespaceId": "public",
+                    "tableName": "DestinationOption"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "Member_tripId_name_key"
+                  },
+                  "name": "Member_tripId_fkey",
+                  "onDelete": "cascade",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["tripId"],
+                    "namespaceId": "public",
+                    "tableName": "Member"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "Trip"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": ["tripId", "name"],
+                  "name": "Member_tripId_name_key",
+                  "unique": true
+                }
+              ],
+              "primaryKey": {
+                "columns": ["id"],
+                "name": "Member_pkey"
+              },
+              "uniques": []
+            },
+            "MemberSession": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "expiresAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "memberId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "tokenHash": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "MemberSession_memberId_key"
+                  },
+                  "name": "MemberSession_memberId_fkey",
+                  "onDelete": "cascade",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["memberId"],
+                    "namespaceId": "public",
+                    "tableName": "MemberSession"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "Member"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": ["memberId"],
+                  "name": "MemberSession_memberId_key",
+                  "unique": true
+                },
+                {
+                  "columns": ["tokenHash"],
+                  "name": "MemberSession_tokenHash_key",
+                  "unique": true
+                }
+              ],
+              "primaryKey": {
+                "columns": ["id"],
+                "name": "MemberSession_pkey"
+              },
+              "uniques": []
+            },
+            "Planner": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "email": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "hash": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "salt": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "username": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [
+                {
+                  "columns": ["email"],
+                  "name": "Planner_email_key",
+                  "unique": true
+                },
+                {
+                  "columns": ["username"],
+                  "name": "Planner_username_key",
+                  "unique": true
+                }
+              ],
+              "primaryKey": {
+                "columns": ["id"],
+                "name": "Planner_pkey"
+              },
+              "uniques": []
+            },
+            "PlannerSession": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "expiresAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "plannerId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "tokenHash": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "PlannerSession_plannerId_idx"
+                  },
+                  "name": "PlannerSession_plannerId_fkey",
+                  "onDelete": "cascade",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["plannerId"],
+                    "namespaceId": "public",
+                    "tableName": "PlannerSession"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "Planner"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": ["plannerId"],
+                  "name": "PlannerSession_plannerId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": ["tokenHash"],
+                  "name": "PlannerSession_tokenHash_key",
+                  "unique": true
+                }
+              ],
+              "primaryKey": {
+                "columns": ["id"],
+                "name": "PlannerSession_pkey"
+              },
+              "uniques": []
+            },
+            "Trip": {
+              "columns": {
+                "accessCodeEncrypted": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "accessCodeHash": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "accessCodeVersion": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "kind": "literal",
+                    "value": 1
+                  },
+                  "nullable": false
+                },
+                "chosenContributionId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "chosenDateId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "chosenDestinationId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "contributionsEnabled": {
+                  "codecId": "pg/bool@1",
+                  "dataType": "pg/bool",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "description": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "nullable": false
+                },
+                "finalizedAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "mode": {
+                  "codecId": "pg/enum@1",
+                  "dataType": "pg/enum",
+                  "nullable": false,
+                  "typeParams": {
+                    "typeName": "TripMode"
+                  },
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "TripMode",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "plannerId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "timezone": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "title": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamp-date@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "name": "Trip_chosenContributionId_fkey",
+                  "onDelete": "setNull",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["chosenContributionId"],
+                    "namespaceId": "public",
+                    "tableName": "Trip"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "ContributionOption"
+                  }
+                },
+                {
+                  "name": "Trip_chosenDateId_fkey",
+                  "onDelete": "setNull",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["chosenDateId"],
+                    "namespaceId": "public",
+                    "tableName": "Trip"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "DateOption"
+                  }
+                },
+                {
+                  "name": "Trip_chosenDestinationId_fkey",
+                  "onDelete": "setNull",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["chosenDestinationId"],
+                    "namespaceId": "public",
+                    "tableName": "Trip"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "DestinationOption"
+                  }
+                },
+                {
+                  "name": "Trip_contribution_same_trip",
+                  "source": {
+                    "columns": ["id", "chosenContributionId"],
+                    "namespaceId": "public",
+                    "tableName": "Trip"
+                  },
+                  "target": {
+                    "columns": ["tripId", "id"],
+                    "namespaceId": "public",
+                    "tableName": "ContributionOption"
+                  }
+                },
+                {
+                  "name": "Trip_date_same_trip",
+                  "source": {
+                    "columns": ["id", "chosenDateId"],
+                    "namespaceId": "public",
+                    "tableName": "Trip"
+                  },
+                  "target": {
+                    "columns": ["tripId", "id"],
+                    "namespaceId": "public",
+                    "tableName": "DateOption"
+                  }
+                },
+                {
+                  "name": "Trip_destination_same_trip",
+                  "source": {
+                    "columns": ["id", "chosenDestinationId"],
+                    "namespaceId": "public",
+                    "tableName": "Trip"
+                  },
+                  "target": {
+                    "columns": ["tripId", "id"],
+                    "namespaceId": "public",
+                    "tableName": "DestinationOption"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "Trip_plannerId_idx"
+                  },
+                  "name": "Trip_plannerId_fkey",
+                  "onDelete": "cascade",
+                  "onUpdate": "cascade",
+                  "source": {
+                    "columns": ["plannerId"],
+                    "namespaceId": "public",
+                    "tableName": "Trip"
+                  },
+                  "target": {
+                    "columns": ["id"],
+                    "namespaceId": "public",
+                    "tableName": "Planner"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": ["accessCodeHash"],
+                  "name": "Trip_accessCodeHash_key",
+                  "unique": true
+                },
+                {
+                  "columns": ["plannerId"],
+                  "name": "Trip_plannerId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": ["id"],
+                "name": "Trip_pkey"
+              },
+              "uniques": []
+            }
+          },
+          "valueSet": {
+            "TripMode": {
+              "kind": "valueSet",
+              "values": ["PLANNING", "PLANNED"]
+            }
+          }
+        },
+        "id": "public",
+        "kind": "postgres-schema"
+      }
+    },
+    "storageHash": "e0ea17c377c714eb43c8ae71b31fcf5c67147400e1debcc40cfc66aec3104772"
+  },
+  "execution": {
+    "executionHash": "7b601fc7359b869f90a5b7d88c409dfadb662b151d4d256db5ec56071ee679a2",
+    "mutations": {
+      "defaults": [
+        {
+          "onCreate": {
+            "id": "cuid2",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "ContributionOption",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "ref": {
+            "entry": "ContributionOption",
+            "field": "updatedAt",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "cuid2",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "DateOption",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "ref": {
+            "entry": "DateOption",
+            "field": "updatedAt",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "cuid2",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "DestinationOption",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "ref": {
+            "entry": "DestinationOption",
+            "field": "updatedAt",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "cuid2",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "Member",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "ref": {
+            "entry": "Member",
+            "field": "updatedAt",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "cuid2",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "MemberSession",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "cuid2",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "Planner",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "ref": {
+            "entry": "Planner",
+            "field": "updatedAt",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "cuid2",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "PlannerSession",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "cuid2",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "Trip",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "ref": {
+            "entry": "Trip",
+            "field": "updatedAt",
+            "namespace": "public"
+          }
+        }
+      ]
+    }
+  },
+  "capabilities": {
+    "postgres": {
+      "distinctOn": true,
+      "forKeyShare": true,
+      "forNoKeyUpdate": true,
+      "jsonAgg": true,
+      "lateral": true,
+      "limit": true,
+      "orderBy": true,
+      "returning": true
+    },
+    "sql": {
+      "checkConstraint": true,
+      "defaultInInsert": true,
+      "enums": true,
+      "forShare": true,
+      "forUpdate": true,
+      "insertOnConflictSkip": true,
+      "insertOnConflictWithoutTarget": true,
+      "lateral": true,
+      "lockNowait": true,
+      "lockOf": true,
+      "lockSkipLocked": true,
+      "returning": true,
+      "scalarList": true
+    }
+  },
+  "extensions": {},
+  "meta": {},
+  "_generated": {
+    "warning": "⚠️  GENERATED FILE - DO NOT EDIT",
+    "message": "This file is automatically generated by \"prisma contract emit\".",
+    "regenerate": "To regenerate, run: prisma contract emit"
+  }
+}

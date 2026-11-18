@@ -1,0 +1,156 @@
+// use prisma-8
+// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+
+namespace public {
+  model DateOption {
+    id            String                       @id(map: "DateOption_pkey") @onCreate(cuid(2))
+    tripId        String
+    start         DateTime(storage: timestamp)
+    end           DateTime(storage: timestamp)
+    createdAt     DateTime(storage: timestamp) @default(now())
+    updatedAt     DateTime(storage: timestamp) @onCreate(now()) @onUpdate(now())
+    trip          Trip                         @relation(fields: [tripId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "DateOption_tripId_fkey", index: "DateOption_tripId_id_key")
+    members       Member[]                     @relation(name: "Member_dateVoteId_fkey")
+    membersMember Member[]                     @relation(name: "Member_date_same_trip")
+    trips         Trip[]                       @relation(name: "Trip_chosenDateId_fkey")
+    tripsTrip     Trip[]                       @relation(name: "Trip_date_same_trip")
+
+    @@index([tripId, id], map: "DateOption_tripId_id_key", unique: true)
+    @@index([tripId, start, end], map: "DateOption_tripId_start_end_key", unique: true)
+    @@check(expression: sql`("end" > start)`, map: "DateOption_valid_window")
+  }
+
+  model DestinationOption {
+    id            String                       @id(map: "DestinationOption_pkey") @onCreate(cuid(2))
+    tripId        String
+    name          String
+    imageUrl      String?
+    createdAt     DateTime(storage: timestamp) @default(now())
+    updatedAt     DateTime(storage: timestamp) @onCreate(now()) @onUpdate(now())
+    trip          Trip                         @relation(fields: [tripId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "DestinationOption_tripId_fkey", index: "DestinationOption_tripId_id_key")
+    members       Member[]                     @relation(name: "Member_destinationVoteId_fkey")
+    membersMember Member[]                     @relation(name: "Member_destination_same_trip")
+    trips         Trip[]                       @relation(name: "Trip_chosenDestinationId_fkey")
+    tripsTrip     Trip[]                       @relation(name: "Trip_destination_same_trip")
+
+    @@index([tripId, id], map: "DestinationOption_tripId_id_key", unique: true)
+    @@index([tripId, name], map: "DestinationOption_tripId_name_key", unique: true)
+  }
+
+  model Planner {
+    id              String                       @id(map: "Planner_pkey") @onCreate(cuid(2))
+    email           String
+    username        String?
+    salt            String
+    hash            String
+    createdAt       DateTime(storage: timestamp) @default(now())
+    updatedAt       DateTime(storage: timestamp) @onCreate(now()) @onUpdate(now())
+    plannerSessions PlannerSession[]
+    trips           Trip[]
+
+    @@index([email], map: "Planner_email_key", unique: true)
+    @@index([username], map: "Planner_username_key", unique: true)
+  }
+
+  model Trip {
+    id                   String                        @id(map: "Trip_pkey") @onCreate(cuid(2))
+    plannerId            String
+    title                String
+    description          String                        @default("")
+    accessCodeEncrypted  String?
+    accessCodeHash       String
+    accessCodeVersion    Int                           @default(1)
+    mode                 pg.enum(TripMode)
+    timezone             String
+    contributionsEnabled Boolean                       @default(false)
+    chosenDestinationId  String?
+    chosenDateId         String?
+    chosenContributionId String?
+    finalizedAt          DateTime(storage: timestamp)?
+    createdAt            DateTime(storage: timestamp)  @default(now())
+    updatedAt            DateTime(storage: timestamp) @onCreate(now()) @onUpdate(now())
+    contributionOptions  ContributionOption[]
+    dateOptions          DateOption[]
+    destinationOptions   DestinationOption[]
+    members              Member[]
+    chosenContribution   ContributionOption?           @relation(name: "Trip_chosenContributionId_fkey", fields: [chosenContributionId], references: [id], onDelete: SetNull, onUpdate: Cascade, map: "Trip_chosenContributionId_fkey", index: false)
+    chosenDate           DateOption?                   @relation(name: "Trip_chosenDateId_fkey", fields: [chosenDateId], references: [id], onDelete: SetNull, onUpdate: Cascade, map: "Trip_chosenDateId_fkey", index: false)
+    chosenDestination    DestinationOption?            @relation(name: "Trip_chosenDestinationId_fkey", fields: [chosenDestinationId], references: [id], onDelete: SetNull, onUpdate: Cascade, map: "Trip_chosenDestinationId_fkey", index: false)
+    contributionOption   ContributionOption?           @relation(name: "Trip_contribution_same_trip", fields: [id, chosenContributionId], references: [tripId, id], map: "Trip_contribution_same_trip", index: false)
+    dateOption           DateOption?                   @relation(name: "Trip_date_same_trip", fields: [id, chosenDateId], references: [tripId, id], map: "Trip_date_same_trip", index: false)
+    destinationOption    DestinationOption?            @relation(name: "Trip_destination_same_trip", fields: [id, chosenDestinationId], references: [tripId, id], map: "Trip_destination_same_trip", index: false)
+    planner              Planner                       @relation(fields: [plannerId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "Trip_plannerId_fkey")
+
+    @@index([accessCodeHash], map: "Trip_accessCodeHash_key", unique: true)
+    @@index([plannerId], map: "Trip_plannerId_idx")
+  }
+
+  model ContributionOption {
+    id            String                       @id(map: "ContributionOption_pkey") @onCreate(cuid(2))
+    tripId        String
+    amount        Numeric(12, 2)
+    createdAt     DateTime(storage: timestamp) @default(now())
+    updatedAt     DateTime(storage: timestamp) @onCreate(now()) @onUpdate(now())
+    trip          Trip                         @relation(fields: [tripId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "ContributionOption_tripId_fkey", index: "ContributionOption_tripId_amount_key")
+    members       Member[]                     @relation(name: "Member_contributionVoteId_fkey")
+    membersMember Member[]                     @relation(name: "Member_contribution_same_trip")
+    trips         Trip[]                       @relation(name: "Trip_chosenContributionId_fkey")
+    tripsTrip     Trip[]                       @relation(name: "Trip_contribution_same_trip")
+
+    @@index([tripId, amount], map: "ContributionOption_tripId_amount_key", unique: true)
+    @@index([tripId, id], map: "ContributionOption_tripId_id_key", unique: true)
+    @@check(expression: sql`(amount > (0)::numeric)`, map: "ContributionOption_amount_positive")
+  }
+
+  model Member {
+    id                 String                       @id(map: "Member_pkey") @onCreate(cuid(2))
+    tripId             String
+    name               String
+    amountPaid         Numeric(12, 2)               @default(0)
+    destinationVoteId  String?
+    dateVoteId         String?
+    contributionVoteId String?
+    createdAt          DateTime(storage: timestamp) @default(now())
+    updatedAt          DateTime(storage: timestamp) @onCreate(now()) @onUpdate(now())
+    memberSession      MemberSession?
+    contributionVote   ContributionOption?          @relation(name: "Member_contributionVoteId_fkey", fields: [contributionVoteId], references: [id], onDelete: SetNull, onUpdate: Cascade, map: "Member_contributionVoteId_fkey", index: false)
+    contributionOption ContributionOption?          @relation(name: "Member_contribution_same_trip", fields: [tripId, contributionVoteId], references: [tripId, id], map: "Member_contribution_same_trip", index: false)
+    dateVote           DateOption?                  @relation(name: "Member_dateVoteId_fkey", fields: [dateVoteId], references: [id], onDelete: SetNull, onUpdate: Cascade, map: "Member_dateVoteId_fkey", index: false)
+    dateOption         DateOption?                  @relation(name: "Member_date_same_trip", fields: [tripId, dateVoteId], references: [tripId, id], map: "Member_date_same_trip", index: false)
+    destinationVote    DestinationOption?           @relation(name: "Member_destinationVoteId_fkey", fields: [destinationVoteId], references: [id], onDelete: SetNull, onUpdate: Cascade, map: "Member_destinationVoteId_fkey", index: false)
+    destinationOption  DestinationOption?           @relation(name: "Member_destination_same_trip", fields: [tripId, destinationVoteId], references: [tripId, id], map: "Member_destination_same_trip", index: false)
+    trip               Trip                         @relation(fields: [tripId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "Member_tripId_fkey", index: "Member_tripId_name_key")
+
+    @@index([tripId, name], map: "Member_tripId_name_key", unique: true)
+    @@check(expression: sql`("amountPaid" >= (0)::numeric)`, map: "Member_amountPaid_nonnegative")
+  }
+
+  model MemberSession {
+    id        String                       @id(map: "MemberSession_pkey") @onCreate(cuid(2))
+    memberId  String
+    tokenHash String
+    expiresAt DateTime(storage: timestamp)
+    createdAt DateTime(storage: timestamp) @default(now())
+    member    Member                       @relation(fields: [memberId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "MemberSession_memberId_fkey")
+
+    @@index([memberId], map: "MemberSession_memberId_key", unique: true)
+    @@index([tokenHash], map: "MemberSession_tokenHash_key", unique: true)
+  }
+
+  model PlannerSession {
+    id        String                       @id(map: "PlannerSession_pkey") @onCreate(cuid(2))
+    plannerId String
+    tokenHash String
+    expiresAt DateTime(storage: timestamp)
+    createdAt DateTime(storage: timestamp) @default(now())
+    planner   Planner                      @relation(fields: [plannerId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "PlannerSession_plannerId_fkey")
+
+    @@index([plannerId], map: "PlannerSession_plannerId_idx")
+    @@index([tokenHash], map: "PlannerSession_tokenHash_key", unique: true)
+  }
+
+  native_enum TripMode {
+    PLANNING = "PLANNING"
+    PLANNED = "PLANNED"
+  }
+}
