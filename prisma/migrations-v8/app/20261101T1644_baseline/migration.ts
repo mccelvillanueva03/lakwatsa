@@ -534,12 +534,96 @@ export default class M extends Migration<never, End> {
         },
       }),
       // Prisma v8 does not represent FK deferrability in its contract yet.
-      rawSql({id:'defer.Member_destination_same_trip',label:'Preserve deferred constraint Member_destination_same_trip',operationClass:'additive',target:{id:'postgres'},precheck:[],execute:[{description:'Restore original deferred foreign-key behavior',sql:'ALTER TABLE "public"."Member" ALTER CONSTRAINT "Member_destination_same_trip" DEFERRABLE INITIALLY DEFERRED',params:[]}],postcheck:[]}),
-      rawSql({id:'defer.Member_date_same_trip',label:'Preserve deferred constraint Member_date_same_trip',operationClass:'additive',target:{id:'postgres'},precheck:[],execute:[{description:'Restore original deferred foreign-key behavior',sql:'ALTER TABLE "public"."Member" ALTER CONSTRAINT "Member_date_same_trip" DEFERRABLE INITIALLY DEFERRED',params:[]}],postcheck:[]}),
-      rawSql({id:'defer.Member_contribution_same_trip',label:'Preserve deferred constraint Member_contribution_same_trip',operationClass:'additive',target:{id:'postgres'},precheck:[],execute:[{description:'Restore original deferred foreign-key behavior',sql:'ALTER TABLE "public"."Member" ALTER CONSTRAINT "Member_contribution_same_trip" DEFERRABLE INITIALLY DEFERRED',params:[]}],postcheck:[]}),
-      rawSql({id:'defer.Trip_destination_same_trip',label:'Preserve deferred constraint Trip_destination_same_trip',operationClass:'additive',target:{id:'postgres'},precheck:[],execute:[{description:'Restore original deferred foreign-key behavior',sql:'ALTER TABLE "public"."Trip" ALTER CONSTRAINT "Trip_destination_same_trip" DEFERRABLE INITIALLY DEFERRED',params:[]}],postcheck:[]}),
-      rawSql({id:'defer.Trip_date_same_trip',label:'Preserve deferred constraint Trip_date_same_trip',operationClass:'additive',target:{id:'postgres'},precheck:[],execute:[{description:'Restore original deferred foreign-key behavior',sql:'ALTER TABLE "public"."Trip" ALTER CONSTRAINT "Trip_date_same_trip" DEFERRABLE INITIALLY DEFERRED',params:[]}],postcheck:[]}),
-      rawSql({id:'defer.Trip_contribution_same_trip',label:'Preserve deferred constraint Trip_contribution_same_trip',operationClass:'additive',target:{id:'postgres'},precheck:[],execute:[{description:'Restore original deferred foreign-key behavior',sql:'ALTER TABLE "public"."Trip" ALTER CONSTRAINT "Trip_contribution_same_trip" DEFERRABLE INITIALLY DEFERRED',params:[]}],postcheck:[]}),
+      rawSql({
+        id: 'defer.Member_destination_same_trip',
+        label: 'Preserve deferred constraint Member_destination_same_trip',
+        operationClass: 'additive',
+        target: { id: 'postgres' },
+        precheck: [],
+        execute: [
+          {
+            description: 'Restore original deferred foreign-key behavior',
+            sql: 'ALTER TABLE "public"."Member" ALTER CONSTRAINT "Member_destination_same_trip" DEFERRABLE INITIALLY DEFERRED',
+            params: [],
+          },
+        ],
+        postcheck: [],
+      }),
+      rawSql({
+        id: 'defer.Member_date_same_trip',
+        label: 'Preserve deferred constraint Member_date_same_trip',
+        operationClass: 'additive',
+        target: { id: 'postgres' },
+        precheck: [],
+        execute: [
+          {
+            description: 'Restore original deferred foreign-key behavior',
+            sql: 'ALTER TABLE "public"."Member" ALTER CONSTRAINT "Member_date_same_trip" DEFERRABLE INITIALLY DEFERRED',
+            params: [],
+          },
+        ],
+        postcheck: [],
+      }),
+      rawSql({
+        id: 'defer.Member_contribution_same_trip',
+        label: 'Preserve deferred constraint Member_contribution_same_trip',
+        operationClass: 'additive',
+        target: { id: 'postgres' },
+        precheck: [],
+        execute: [
+          {
+            description: 'Restore original deferred foreign-key behavior',
+            sql: 'ALTER TABLE "public"."Member" ALTER CONSTRAINT "Member_contribution_same_trip" DEFERRABLE INITIALLY DEFERRED',
+            params: [],
+          },
+        ],
+        postcheck: [],
+      }),
+      rawSql({
+        id: 'defer.Trip_destination_same_trip',
+        label: 'Preserve deferred constraint Trip_destination_same_trip',
+        operationClass: 'additive',
+        target: { id: 'postgres' },
+        precheck: [],
+        execute: [
+          {
+            description: 'Restore original deferred foreign-key behavior',
+            sql: 'ALTER TABLE "public"."Trip" ALTER CONSTRAINT "Trip_destination_same_trip" DEFERRABLE INITIALLY DEFERRED',
+            params: [],
+          },
+        ],
+        postcheck: [],
+      }),
+      rawSql({
+        id: 'defer.Trip_date_same_trip',
+        label: 'Preserve deferred constraint Trip_date_same_trip',
+        operationClass: 'additive',
+        target: { id: 'postgres' },
+        precheck: [],
+        execute: [
+          {
+            description: 'Restore original deferred foreign-key behavior',
+            sql: 'ALTER TABLE "public"."Trip" ALTER CONSTRAINT "Trip_date_same_trip" DEFERRABLE INITIALLY DEFERRED',
+            params: [],
+          },
+        ],
+        postcheck: [],
+      }),
+      rawSql({
+        id: 'defer.Trip_contribution_same_trip',
+        label: 'Preserve deferred constraint Trip_contribution_same_trip',
+        operationClass: 'additive',
+        target: { id: 'postgres' },
+        precheck: [],
+        execute: [
+          {
+            description: 'Restore original deferred foreign-key behavior',
+            sql: 'ALTER TABLE "public"."Trip" ALTER CONSTRAINT "Trip_contribution_same_trip" DEFERRABLE INITIALLY DEFERRED',
+            params: [],
+          },
+        ],
+        postcheck: [],
+      }),
     ];
   }
 }

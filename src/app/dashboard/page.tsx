@@ -1,26 +1,35 @@
-import { Suspense } from "react";
-import Link from "next/link";
-import { Plus, ArrowUpRight, MapPin, CalendarDays } from "lucide-react";
-import { listTrips } from "@/lib/trips";
-import { requirePlanner } from "@/lib/auth";
-import { dateLabel } from "@/lib/dates";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import Decimal from "decimal.js";
+import { Suspense } from 'react';
+import Link from 'next/link';
+import { Plus, ArrowUpRight, MapPin, CalendarDays } from 'lucide-react';
+import { listTrips, plannerTripCode } from '@/lib/trips';
+import { requirePlanner, plannerToken } from '@/lib/auth';
+import { dateLabel } from '@/lib/dates';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { TripShare } from '@/components/trip-share';
+import Decimal from 'decimal.js';
 async function Dashboard() {
   const planner = await requirePlanner();
-  const trips=(await listTrips(planner.id)).map(trip=>({...trip,chosenDate:trip.dates.find(d=>d.id===trip.chosenDateId),chosenDestination:trip.destinations.find(d=>d.id===trip.chosenDestinationId),chosenContribution:trip.contributions.find(c=>c.id===trip.chosenContributionId)}));
+  const trips = (await listTrips(planner.id)).map((trip) => ({
+    ...trip,
+    chosenDate: trip.dates.find((d) => d.id === trip.chosenDateId),
+    chosenDestination: trip.destinations.find((d) => d.id === trip.chosenDestinationId),
+    chosenContribution: trip.contributions.find((c) => c.id === trip.chosenContributionId),
+  }));
+  const token = await plannerToken();
+  const codes = new Map(
+    await Promise.all(
+      trips.map(async (trip) => [trip.id, await plannerTripCode(token, trip.id)] as const),
+    ),
+  );
   return (
     <div className="space-y-9">
       <div className="flex flex-wrap justify-between items-end gap-5">
         <div>
-          <p className="eyebrow">YOUR NEXT CHAPTER, OUT THERE</p>
-          <h1 className="page-title mt-3">Good things on the horizon.</h1>
-          <p className="text-muted-foreground mt-3">
-            All your people. All your plans. Right here.
-          </p>
+          <h1 className="page-title">Good things on the horizon.</h1>
+          <p className="text-muted-foreground mt-3">All your people. All your plans. Right here.</p>
         </div>
         <Button asChild>
           <Link href="/trips/new">
@@ -33,9 +42,7 @@ async function Dashboard() {
         <Card className="py-12 text-center">
           <CardContent>
             <MapPin className="mx-auto text-primary mb-5" size={36} />
-            <h2 className="text-2xl font-semibold">
-              A blank calendar is an invitation.
-            </h2>
+            <h2 className="text-2xl font-semibold">A blank calendar is an invitation.</h2>
             <p className="text-muted-foreground mt-3 mb-6">
               Start with an idea. We’ll help you get everyone there.
             </p>
@@ -51,33 +58,21 @@ async function Dashboard() {
           {trips.map((trip) => {
             const target = trip.chosenContribution?.amount;
             const total = target?.mul(trip.members.length);
-            const paid = trip.members.reduce(
-              (sum, m) => sum.plus(m.amountPaid),
-              new Decimal(0),
-            );
-            const progress = total?.gt(0)
-              ? Math.min(100, paid.div(total).mul(100).toNumber())
-              : 0;
+            const paid = trip.members.reduce((sum, m) => sum.plus(m.amountPaid), new Decimal(0));
+            const progress = total?.gt(0) ? Math.min(100, paid.div(total).mul(100).toNumber()) : 0;
             return (
-              <Card key={trip.id}>
+              <Card key={trip.id} className="shadow-none gap-5">
                 <CardHeader>
-                  <div className="flex justify-between">
-                    <Badge
-                      variant={
-                        trip.mode === "PLANNING" ? "secondary" : "default"
-                      }
-                    >
-                      {trip.mode === "PLANNING" ? "Planning" : "Planned"}
+                  <div className="flex flex-wrap gap-2 justify-between">
+                    <Badge variant={trip.mode === 'PLANNING' ? 'secondary' : 'default'}>
+                      {trip.mode === 'PLANNING' ? 'Planning' : 'Planned'}
                     </Badge>
                     <span className="text-sm text-muted-foreground">
                       {trip.members.length} people
                     </span>
                   </div>
                   <CardTitle className="text-xl pt-3">
-                    <Link
-                      href={`/trips/${trip.id}/manage`}
-                      className="hover:underline"
-                    >
+                    <Link href={`/trips/${trip.id}/manage`} className="hover:underline">
                       {trip.title}
                     </Link>
                   </CardTitle>
@@ -85,33 +80,32 @@ async function Dashboard() {
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground flex gap-2">
                     <MapPin size={16} />
-                    {trip.chosenDestination?.name || "Finding your place"}
+                    {trip.chosenDestination?.name || 'Finding your place'}
                   </p>
                   <p className="text-sm text-muted-foreground flex gap-2">
                     <CalendarDays size={16} />
                     {trip.chosenDate
                       ? dateLabel(trip.chosenDate.start, trip.timezone)
-                      : "Dates up for a vote"}
+                      : 'Dates up for a vote'}
                   </p>
                   {trip.contributionsEnabled && (
                     <div>
                       <div className="flex justify-between text-xs mb-2">
                         <span>Contribution progress</span>
-                        <span>
-                          {target
-                            ? `${Math.round(progress)}%`
-                            : "Target to be decided"}
-                        </span>
+                        <span>{target ? `${Math.round(progress)}%` : 'Target to be decided'}</span>
                       </div>
                       <Progress value={progress} />
                     </div>
                   )}
-                  <Link
-                    className="text-link text-sm inline-flex items-center gap-2"
-                    href={`/trips/${trip.id}/manage`}
-                  >
-                    Open plan <ArrowUpRight size={16} />
-                  </Link>
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t pt-4">
+                    <Link
+                      className="text-link text-sm inline-flex items-center gap-2"
+                      href={`/trips/${trip.id}/manage`}
+                    >
+                      Open plan <ArrowUpRight size={16} />
+                    </Link>
+                    <TripShare code={codes.get(trip.id) ?? null} title={trip.title} id={trip.id} />
+                  </div>
                 </CardContent>
               </Card>
             );

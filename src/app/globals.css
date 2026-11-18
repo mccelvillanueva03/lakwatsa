@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @custom-variant dark (&:is(.dark *));
 @theme inline {
   --color-background: var(--background);
@@ -23,8 +23,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: "Avenir Next", "Segoe UI", sans-serif;
-  --font-mono: "SFMono-Regular", Consolas, monospace;
+  --font-sans: 'Avenir Next', 'Segoe UI', sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, monospace;
 }
 :root {
   --background: #faf9f5;
@@ -65,7 +65,7 @@
     outline: 2px solid var(--primary);
     outline-offset: 4px;
   }
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     accent-color: var(--primary);
     width: 17px;
     height: 17px;
@@ -274,5 +274,68 @@
   }
   .hero-title {
     letter-spacing: -1.8px;
+  }
+}
+
+/* The landing page keeps the warm travel palette, with quieter framing. */
+.landing .hero-title {
+  letter-spacing: -0.035em;
+  max-width: 13ch;
+}
+.landing .trip-art {
+  height: 430px;
+  border-radius: 140px 140px 16px 16px;
+}
+.landing .art-card {
+  background: var(--card);
+  backdrop-filter: none;
+  border: 0;
+  box-shadow: 0 12px 30px #233c3314;
+}
+.landing .art-card > div:first-of-type {
+  flex-wrap: wrap;
+}
+.landing-steps {
+  border-block: 1px solid var(--border);
+}
+.landing .step-card {
+  border: 0;
+  padding: 28px 0;
+}
+.join-section form button[type='submit'] {
+  width: 100%;
+}
+.join-section input {
+  background: var(--card);
+  min-height: 48px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+}
+::selection {
+  background: #cbded0;
+  color: #233c33;
+}
+a {
+  text-underline-offset: 4px;
+}
+input,
+textarea {
+  caret-color: var(--primary);
+}
+@media (max-width: 640px) {
+  .landing .trip-art {
+    height: 350px;
+  }
+  .landing .hero-title {
+    font-size: clamp(40px, 10vw, 60px);
+  }
+  .landing .step-card {
+    padding: 20px 0;
+  }
+  .landing-steps {
+    gap: 0;
+  }
+  .landing .step-card + .step-card {
+    border-top: 1px solid var(--border);
   }
 }

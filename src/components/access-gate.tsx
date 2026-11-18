@@ -1,6 +1,6 @@
-import { redeemAction } from "@/app/actions/access";
-import { ActionForm, Field } from "./action-form";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { redeemAction } from '@/app/actions/access';
+import { ActionForm, Field } from './action-form';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 export function AccessGate() {
   return (
     <div className="auth-wrap">

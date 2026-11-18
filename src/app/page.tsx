@@ -1,18 +1,10 @@
-import { Suspense } from "react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import Link from "next/link";
-import {
-  ArrowUpRight,
-  MapPin,
-  CalendarDays,
-  Users,
-  MoveRight,
-  Sun,
-} from "lucide-react";
-import { redeemAction } from "./actions/access";
-import { ActionForm, Field } from "@/components/action-form";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Suspense } from 'react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import Link from 'next/link';
+import { ArrowUpRight, MapPin, CalendarDays, Users, MoveRight, Sun } from 'lucide-react';
+import { redeemAction } from './actions/access';
+import { ActionForm, Field } from '@/components/action-form';
+import { Button } from '@/components/ui/button';
 async function InvalidInviteNotice({
   searchParams,
 }: {
@@ -33,21 +25,17 @@ export default function Home({
   searchParams: Promise<{ invalidCode?: string }>;
 }) {
   return (
-    <div className="space-y-14">
+    <div className="landing space-y-16 sm:space-y-24">
       <section className="grid lg:grid-cols-[1.15fr_1fr] gap-10 lg:gap-16 items-center pt-4 sm:pt-8">
         <div className="space-y-7">
-          <p className="eyebrow flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-primary" />
-            Less back-and-forth, more let’s go
-          </p>
-          <h1 className="hero-title">
+          <h1 className="hero-title text-balance">
             The group chat
             <br />
             deserves a <span className="serif-accent">getaway.</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-md leading-relaxed">
-            Pick a place. Find your dates. Get everyone on the same page — and
-            finally make that trip happen.
+            Pick a place. Find your dates. Get everyone on the same page — and finally make that
+            trip happen.
           </p>
           <div className="flex flex-wrap gap-3">
             <Button asChild size="lg">
@@ -66,7 +54,7 @@ export default function Home({
             One planner. Your favorite people. A shared plan.
           </p>
         </div>
-        <div className="trip-art" aria-label="Illustration of a sunny getaway">
+        <div className="trip-art" role="img" aria-label="Illustration of a sunny getaway">
           <div className="art-sun">
             <Sun size={46} />
           </div>
@@ -74,8 +62,7 @@ export default function Home({
           <div className="art-mountain mountain-front" />
           <div className="art-water" />
           <div className="art-card">
-            <p className="eyebrow">NEXT UP · YOUR NEXT ESCAPE</p>
-            <p className="text-2xl font-semibold mt-3">Somewhere, together.</p>
+            <p className="text-2xl font-semibold">Somewhere, together.</p>
             <div className="flex gap-3 mt-4 text-sm">
               <span className="flex items-center gap-1">
                 <MapPin size={15} />A place you all love
@@ -86,15 +73,13 @@ export default function Home({
             </div>
             <div className="mt-5 flex items-center gap-2">
               <div className="flex -space-x-2">
-                {["A", "B", "C", "+2"].map((v, i) => (
+                {['A', 'B', 'C', '+2'].map((v, i) => (
                   <span key={v} className={`avatar avatar-${i}`}>
                     {v}
                   </span>
                 ))}
               </div>
-              <span className="text-xs text-muted-foreground ml-2">
-                The whole gang is in.
-              </span>
+              <span className="text-xs text-muted-foreground ml-2">The whole gang is in.</span>
             </div>
           </div>
           <span className="art-sticker">
@@ -104,70 +89,61 @@ export default function Home({
           </span>
         </div>
       </section>
-      <section className="grid md:grid-cols-3 gap-5">
+      <section
+        aria-label="How trip planning works"
+        className="landing-steps grid md:grid-cols-3 gap-6 md:gap-10"
+      >
         {[
           {
             icon: MapPin,
-            n: "01",
-            title: "Put your ideas out there",
-            copy: "Beach, mountains, or a weekend staycation. Give your friends a few good options.",
+            title: 'Put your ideas out there',
+            copy: 'Beach, mountains, or a weekend staycation. Give your friends a few good options.',
           },
           {
             icon: Users,
-            n: "02",
-            title: "Let the group weigh in",
-            copy: "Share a private code. Everyone votes for their favorite place, dates, and budget.",
+            title: 'Let the group weigh in',
+            copy: 'Share a private code. Everyone votes for their favorite place, dates, and budget.',
           },
           {
             icon: CalendarDays,
-            n: "03",
-            title: "Make it official",
-            copy: "Settle the details and keep contributions clear. All that’s left is the trip.",
+            title: 'Make it official',
+            copy: 'Settle the details and keep contributions clear. All that’s left is the trip.',
           },
         ].map((s) => (
-          <div key={s.n} className="step-card">
+          <div key={s.title} className="step-card">
             <div className="flex justify-between items-center">
               <s.icon size={22} className="text-primary" />
-              <span className="eyebrow text-muted-foreground">{s.n}</span>
             </div>
             <h2 className="text-lg font-semibold mt-5 mb-2">{s.title}</h2>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {s.copy}
-            </p>
+            <p className="text-sm leading-relaxed text-muted-foreground">{s.copy}</p>
           </div>
         ))}
       </section>
       <section
         id="join"
-        className="grid md:grid-cols-2 gap-8 items-center rounded-3xl bg-secondary p-6 sm:p-10"
+        className="join-section grid md:grid-cols-[1fr_0.85fr] gap-8 lg:gap-16 items-center rounded-2xl bg-secondary p-6 sm:p-10 lg:p-12 scroll-mt-8"
       >
         <div>
-          <p className="eyebrow mb-3">ALREADY PART OF THE PLAN?</p>
-          <h2 className="text-3xl font-semibold tracking-tight">
-            Your people are waiting.
-          </h2>
+          <h2 className="text-3xl font-semibold tracking-tight">Your people are waiting.</h2>
           <p className="text-muted-foreground mt-3 max-w-sm">
-            Enter the code your planner shared. No account needed to join or
-            take a look.
+            Enter the code your planner shared. No account needed to join or take a look.
           </p>
         </div>
-        <Card>
-          <CardContent className="pt-6">
-            <Suspense fallback={null}>
-              <InvalidInviteNotice searchParams={searchParams} />
-            </Suspense>
-            <ActionForm action={redeemAction} submit="Find my trip">
-              <Field
-                name="code"
-                label="Trip code"
-                placeholder="ABCD-EFGH-JKLM"
-                autoComplete="off"
-                maxLength={30}
-                required
-              />
-            </ActionForm>
-          </CardContent>
-        </Card>
+        <div className="space-y-4">
+          <Suspense fallback={null}>
+            <InvalidInviteNotice searchParams={searchParams} />
+          </Suspense>
+          <ActionForm action={redeemAction} submit="Find my trip">
+            <Field
+              name="code"
+              label="Trip code"
+              placeholder="ABCD-EFGH-JKLM"
+              autoComplete="off"
+              maxLength={30}
+              required
+            />
+          </ActionForm>
+        </div>
       </section>
     </div>
   );

@@ -57,6 +57,7 @@ namespace public {
     plannerId            String
     title                String
     description          String                        @default("")
+    accessCodeEncrypted  String?
     accessCodeHash       String
     accessCodeVersion    Int                           @default(1)
     mode                 pg.enum(TripMode)

@@ -1,8 +1,8 @@
-import { Suspense } from "react";
-import { requirePlanner } from "@/lib/auth";
-import { accountAction } from "@/app/actions/auth";
-import { ActionForm, Field, Hidden } from "@/components/action-form";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Suspense } from 'react';
+import { requirePlanner } from '@/lib/auth';
+import { accountAction } from '@/app/actions/auth';
+import { ActionForm, Field, Hidden } from '@/components/action-form';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 async function Account() {
   const planner = await requirePlanner();
   return (
@@ -22,7 +22,7 @@ async function Account() {
             <Field
               name="username"
               label="Username (optional)"
-              defaultValue={planner.username || ""}
+              defaultValue={planner.username || ''}
               autoComplete="username"
               minLength={3}
               maxLength={32}

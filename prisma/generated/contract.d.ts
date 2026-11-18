@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'da2b2a73b58c2287fd34c7163560f802c6a78849f3c9978ee8457b3aeac49af4'>;
+  StorageHashBase<'e0ea17c377c714eb43c8ae71b31fcf5c67147400e1debcc40cfc66aec3104772'>;
 export type ExecutionHash =
   ExecutionHashBase<'7b601fc7359b869f90a5b7d88c409dfadb662b151d4d256db5ec56071ee679a2'>;
 export type ProfileHash =
@@ -429,6 +429,7 @@ export namespace Models {
     readonly [RelationKeys]?: 'planner';
   };
   export type public_Trip = {
+    accessCodeEncrypted: FieldOutputTypes['public']['Trip']['accessCodeEncrypted'];
     accessCodeHash: FieldOutputTypes['public']['Trip']['accessCodeHash'];
     accessCodeVersion: FieldOutputTypes['public']['Trip']['accessCodeVersion'];
     chosenContributionId: FieldOutputTypes['public']['Trip']['chosenContributionId'];
@@ -1092,6 +1093,12 @@ type ContractBase = Omit<
             };
             readonly Trip: {
               columns: {
+                readonly accessCodeEncrypted: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
                 readonly accessCodeHash: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
@@ -2003,6 +2010,10 @@ type ContractBase = Omit<
           };
           readonly Trip: {
             readonly fields: {
+              readonly accessCodeEncrypted: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly accessCodeHash: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -2214,6 +2225,7 @@ type ContractBase = Omit<
               readonly table: 'Trip';
               readonly namespaceId: 'public';
               readonly fields: {
+                readonly accessCodeEncrypted: { readonly column: 'accessCodeEncrypted' };
                 readonly accessCodeHash: { readonly column: 'accessCodeHash' };
                 readonly accessCodeVersion: { readonly column: 'accessCodeVersion' };
                 readonly chosenContributionId: { readonly column: 'chosenContributionId' };

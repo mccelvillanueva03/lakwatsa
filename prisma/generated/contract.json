@@ -93,12 +93,8 @@
               "members": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "contributionVoteId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["contributionVoteId"]
                 },
                 "to": {
                   "model": "Member",
@@ -108,14 +104,8 @@
               "membersMember": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "tripId",
-                    "id"
-                  ],
-                  "targetFields": [
-                    "tripId",
-                    "contributionVoteId"
-                  ]
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["tripId", "contributionVoteId"]
                 },
                 "to": {
                   "model": "Member",
@@ -126,12 +116,8 @@
                 "cardinality": "N:1",
                 "nullable": false,
                 "on": {
-                  "localFields": [
-                    "tripId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["tripId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "Trip",
@@ -141,12 +127,8 @@
               "trips": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "chosenContributionId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["chosenContributionId"]
                 },
                 "to": {
                   "model": "Trip",
@@ -156,14 +138,8 @@
               "tripsTrip": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "tripId",
-                    "id"
-                  ],
-                  "targetFields": [
-                    "id",
-                    "chosenContributionId"
-                  ]
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["id", "chosenContributionId"]
                 },
                 "to": {
                   "model": "Trip",
@@ -254,12 +230,8 @@
               "members": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "dateVoteId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["dateVoteId"]
                 },
                 "to": {
                   "model": "Member",
@@ -269,14 +241,8 @@
               "membersMember": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "tripId",
-                    "id"
-                  ],
-                  "targetFields": [
-                    "tripId",
-                    "dateVoteId"
-                  ]
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["tripId", "dateVoteId"]
                 },
                 "to": {
                   "model": "Member",
@@ -287,12 +253,8 @@
                 "cardinality": "N:1",
                 "nullable": false,
                 "on": {
-                  "localFields": [
-                    "tripId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["tripId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "Trip",
@@ -302,12 +264,8 @@
               "trips": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "chosenDateId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["chosenDateId"]
                 },
                 "to": {
                   "model": "Trip",
@@ -317,14 +275,8 @@
               "tripsTrip": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "tripId",
-                    "id"
-                  ],
-                  "targetFields": [
-                    "id",
-                    "chosenDateId"
-                  ]
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["id", "chosenDateId"]
                 },
                 "to": {
                   "model": "Trip",
@@ -412,12 +364,8 @@
               "members": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "destinationVoteId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["destinationVoteId"]
                 },
                 "to": {
                   "model": "Member",
@@ -427,14 +375,8 @@
               "membersMember": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "tripId",
-                    "id"
-                  ],
-                  "targetFields": [
-                    "tripId",
-                    "destinationVoteId"
-                  ]
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["tripId", "destinationVoteId"]
                 },
                 "to": {
                   "model": "Member",
@@ -445,12 +387,8 @@
                 "cardinality": "N:1",
                 "nullable": false,
                 "on": {
-                  "localFields": [
-                    "tripId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["tripId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "Trip",
@@ -460,12 +398,8 @@
               "trips": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "chosenDestinationId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["chosenDestinationId"]
                 },
                 "to": {
                   "model": "Trip",
@@ -475,14 +409,8 @@
               "tripsTrip": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "tripId",
-                    "id"
-                  ],
-                  "targetFields": [
-                    "id",
-                    "chosenDestinationId"
-                  ]
+                  "localFields": ["tripId", "id"],
+                  "targetFields": ["id", "chosenDestinationId"]
                 },
                 "to": {
                   "model": "Trip",
@@ -596,14 +524,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "tripId",
-                    "contributionVoteId"
-                  ],
-                  "targetFields": [
-                    "tripId",
-                    "id"
-                  ]
+                  "localFields": ["tripId", "contributionVoteId"],
+                  "targetFields": ["tripId", "id"]
                 },
                 "to": {
                   "model": "ContributionOption",
@@ -614,12 +536,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "contributionVoteId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["contributionVoteId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "ContributionOption",
@@ -630,14 +548,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "tripId",
-                    "dateVoteId"
-                  ],
-                  "targetFields": [
-                    "tripId",
-                    "id"
-                  ]
+                  "localFields": ["tripId", "dateVoteId"],
+                  "targetFields": ["tripId", "id"]
                 },
                 "to": {
                   "model": "DateOption",
@@ -648,12 +560,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "dateVoteId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["dateVoteId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "DateOption",
@@ -664,14 +572,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "tripId",
-                    "destinationVoteId"
-                  ],
-                  "targetFields": [
-                    "tripId",
-                    "id"
-                  ]
+                  "localFields": ["tripId", "destinationVoteId"],
+                  "targetFields": ["tripId", "id"]
                 },
                 "to": {
                   "model": "DestinationOption",
@@ -682,12 +584,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "destinationVoteId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["destinationVoteId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "DestinationOption",
@@ -698,12 +596,8 @@
                 "cardinality": "1:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "memberId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["memberId"]
                 },
                 "to": {
                   "model": "MemberSession",
@@ -714,12 +608,8 @@
                 "cardinality": "N:1",
                 "nullable": false,
                 "on": {
-                  "localFields": [
-                    "tripId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["tripId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "Trip",
@@ -810,12 +700,8 @@
                 "cardinality": "N:1",
                 "nullable": false,
                 "on": {
-                  "localFields": [
-                    "memberId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["memberId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "Member",
@@ -907,12 +793,8 @@
               "plannerSessions": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "plannerId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["plannerId"]
                 },
                 "to": {
                   "model": "PlannerSession",
@@ -922,12 +804,8 @@
               "trips": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "plannerId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["plannerId"]
                 },
                 "to": {
                   "model": "Trip",
@@ -1012,12 +890,8 @@
                 "cardinality": "N:1",
                 "nullable": false,
                 "on": {
-                  "localFields": [
-                    "plannerId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["plannerId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "Planner",
@@ -1049,6 +923,13 @@
           },
           "Trip": {
             "fields": {
+              "accessCodeEncrypted": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "accessCodeHash": {
                 "nullable": false,
                 "type": {
@@ -1172,12 +1053,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "chosenContributionId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["chosenContributionId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "ContributionOption",
@@ -1188,12 +1065,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "chosenDateId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["chosenDateId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "DateOption",
@@ -1204,12 +1077,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "chosenDestinationId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["chosenDestinationId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "DestinationOption",
@@ -1220,14 +1089,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "id",
-                    "chosenContributionId"
-                  ],
-                  "targetFields": [
-                    "tripId",
-                    "id"
-                  ]
+                  "localFields": ["id", "chosenContributionId"],
+                  "targetFields": ["tripId", "id"]
                 },
                 "to": {
                   "model": "ContributionOption",
@@ -1237,12 +1100,8 @@
               "contributionOptions": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "tripId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["tripId"]
                 },
                 "to": {
                   "model": "ContributionOption",
@@ -1253,14 +1112,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "id",
-                    "chosenDateId"
-                  ],
-                  "targetFields": [
-                    "tripId",
-                    "id"
-                  ]
+                  "localFields": ["id", "chosenDateId"],
+                  "targetFields": ["tripId", "id"]
                 },
                 "to": {
                   "model": "DateOption",
@@ -1270,12 +1123,8 @@
               "dateOptions": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "tripId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["tripId"]
                 },
                 "to": {
                   "model": "DateOption",
@@ -1286,14 +1135,8 @@
                 "cardinality": "N:1",
                 "nullable": true,
                 "on": {
-                  "localFields": [
-                    "id",
-                    "chosenDestinationId"
-                  ],
-                  "targetFields": [
-                    "tripId",
-                    "id"
-                  ]
+                  "localFields": ["id", "chosenDestinationId"],
+                  "targetFields": ["tripId", "id"]
                 },
                 "to": {
                   "model": "DestinationOption",
@@ -1303,12 +1146,8 @@
               "destinationOptions": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "tripId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["tripId"]
                 },
                 "to": {
                   "model": "DestinationOption",
@@ -1318,12 +1157,8 @@
               "members": {
                 "cardinality": "1:N",
                 "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "tripId"
-                  ]
+                  "localFields": ["id"],
+                  "targetFields": ["tripId"]
                 },
                 "to": {
                   "model": "Member",
@@ -1334,12 +1169,8 @@
                 "cardinality": "N:1",
                 "nullable": false,
                 "on": {
-                  "localFields": [
-                    "plannerId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
+                  "localFields": ["plannerId"],
+                  "targetFields": ["id"]
                 },
                 "to": {
                   "model": "Planner",
@@ -1349,6 +1180,9 @@
             },
             "storage": {
               "fields": {
+                "accessCodeEncrypted": {
+                  "column": "accessCodeEncrypted"
+                },
                 "accessCodeHash": {
                   "column": "accessCodeHash"
                 },
@@ -1410,10 +1244,7 @@
           "native_enum": {
             "TripMode": {
               "kind": "postgres-enum",
-              "members": [
-                "PLANNING",
-                "PLANNED"
-              ],
+              "members": ["PLANNING", "PLANNED"],
               "typeName": "TripMode"
             }
           },
@@ -1475,16 +1306,12 @@
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "tripId"
-                    ],
+                    "columns": ["tripId"],
                     "namespaceId": "public",
                     "tableName": "ContributionOption"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "Trip"
                   }
@@ -1492,26 +1319,18 @@
               ],
               "indexes": [
                 {
-                  "columns": [
-                    "tripId",
-                    "amount"
-                  ],
+                  "columns": ["tripId", "amount"],
                   "name": "ContributionOption_tripId_amount_key",
                   "unique": true
                 },
                 {
-                  "columns": [
-                    "tripId",
-                    "id"
-                  ],
+                  "columns": ["tripId", "id"],
                   "name": "ContributionOption_tripId_id_key",
                   "unique": true
                 }
               ],
               "primaryKey": {
-                "columns": [
-                  "id"
-                ],
+                "columns": ["id"],
                 "name": "ContributionOption_pkey"
               },
               "uniques": []
@@ -1580,16 +1399,12 @@
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "tripId"
-                    ],
+                    "columns": ["tripId"],
                     "namespaceId": "public",
                     "tableName": "DateOption"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "Trip"
                   }
@@ -1597,27 +1412,18 @@
               ],
               "indexes": [
                 {
-                  "columns": [
-                    "tripId",
-                    "id"
-                  ],
+                  "columns": ["tripId", "id"],
                   "name": "DateOption_tripId_id_key",
                   "unique": true
                 },
                 {
-                  "columns": [
-                    "tripId",
-                    "start",
-                    "end"
-                  ],
+                  "columns": ["tripId", "start", "end"],
                   "name": "DateOption_tripId_start_end_key",
                   "unique": true
                 }
               ],
               "primaryKey": {
-                "columns": [
-                  "id"
-                ],
+                "columns": ["id"],
                 "name": "DateOption_pkey"
               },
               "uniques": []
@@ -1674,16 +1480,12 @@
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "tripId"
-                    ],
+                    "columns": ["tripId"],
                     "namespaceId": "public",
                     "tableName": "DestinationOption"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "Trip"
                   }
@@ -1691,26 +1493,18 @@
               ],
               "indexes": [
                 {
-                  "columns": [
-                    "tripId",
-                    "id"
-                  ],
+                  "columns": ["tripId", "id"],
                   "name": "DestinationOption_tripId_id_key",
                   "unique": true
                 },
                 {
-                  "columns": [
-                    "tripId",
-                    "name"
-                  ],
+                  "columns": ["tripId", "name"],
                   "name": "DestinationOption_tripId_name_key",
                   "unique": true
                 }
               ],
               "primaryKey": {
-                "columns": [
-                  "id"
-                ],
+                "columns": ["id"],
                 "name": "DestinationOption_pkey"
               },
               "uniques": []
@@ -1793,16 +1587,12 @@
                   "onDelete": "setNull",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "contributionVoteId"
-                    ],
+                    "columns": ["contributionVoteId"],
                     "namespaceId": "public",
                     "tableName": "Member"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "ContributionOption"
                   }
@@ -1810,18 +1600,12 @@
                 {
                   "name": "Member_contribution_same_trip",
                   "source": {
-                    "columns": [
-                      "tripId",
-                      "contributionVoteId"
-                    ],
+                    "columns": ["tripId", "contributionVoteId"],
                     "namespaceId": "public",
                     "tableName": "Member"
                   },
                   "target": {
-                    "columns": [
-                      "tripId",
-                      "id"
-                    ],
+                    "columns": ["tripId", "id"],
                     "namespaceId": "public",
                     "tableName": "ContributionOption"
                   }
@@ -1831,16 +1615,12 @@
                   "onDelete": "setNull",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "dateVoteId"
-                    ],
+                    "columns": ["dateVoteId"],
                     "namespaceId": "public",
                     "tableName": "Member"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "DateOption"
                   }
@@ -1848,18 +1628,12 @@
                 {
                   "name": "Member_date_same_trip",
                   "source": {
-                    "columns": [
-                      "tripId",
-                      "dateVoteId"
-                    ],
+                    "columns": ["tripId", "dateVoteId"],
                     "namespaceId": "public",
                     "tableName": "Member"
                   },
                   "target": {
-                    "columns": [
-                      "tripId",
-                      "id"
-                    ],
+                    "columns": ["tripId", "id"],
                     "namespaceId": "public",
                     "tableName": "DateOption"
                   }
@@ -1869,16 +1643,12 @@
                   "onDelete": "setNull",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "destinationVoteId"
-                    ],
+                    "columns": ["destinationVoteId"],
                     "namespaceId": "public",
                     "tableName": "Member"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "DestinationOption"
                   }
@@ -1886,18 +1656,12 @@
                 {
                   "name": "Member_destination_same_trip",
                   "source": {
-                    "columns": [
-                      "tripId",
-                      "destinationVoteId"
-                    ],
+                    "columns": ["tripId", "destinationVoteId"],
                     "namespaceId": "public",
                     "tableName": "Member"
                   },
                   "target": {
-                    "columns": [
-                      "tripId",
-                      "id"
-                    ],
+                    "columns": ["tripId", "id"],
                     "namespaceId": "public",
                     "tableName": "DestinationOption"
                   }
@@ -1910,16 +1674,12 @@
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "tripId"
-                    ],
+                    "columns": ["tripId"],
                     "namespaceId": "public",
                     "tableName": "Member"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "Trip"
                   }
@@ -1927,18 +1687,13 @@
               ],
               "indexes": [
                 {
-                  "columns": [
-                    "tripId",
-                    "name"
-                  ],
+                  "columns": ["tripId", "name"],
                   "name": "Member_tripId_name_key",
                   "unique": true
                 }
               ],
               "primaryKey": {
-                "columns": [
-                  "id"
-                ],
+                "columns": ["id"],
                 "name": "Member_pkey"
               },
               "uniques": []
@@ -1990,16 +1745,12 @@
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "memberId"
-                    ],
+                    "columns": ["memberId"],
                     "namespaceId": "public",
                     "tableName": "MemberSession"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "Member"
                   }
@@ -2007,24 +1758,18 @@
               ],
               "indexes": [
                 {
-                  "columns": [
-                    "memberId"
-                  ],
+                  "columns": ["memberId"],
                   "name": "MemberSession_memberId_key",
                   "unique": true
                 },
                 {
-                  "columns": [
-                    "tokenHash"
-                  ],
+                  "columns": ["tokenHash"],
                   "name": "MemberSession_tokenHash_key",
                   "unique": true
                 }
               ],
               "primaryKey": {
-                "columns": [
-                  "id"
-                ],
+                "columns": ["id"],
                 "name": "MemberSession_pkey"
               },
               "uniques": []
@@ -2080,24 +1825,18 @@
               "foreignKeys": [],
               "indexes": [
                 {
-                  "columns": [
-                    "email"
-                  ],
+                  "columns": ["email"],
                   "name": "Planner_email_key",
                   "unique": true
                 },
                 {
-                  "columns": [
-                    "username"
-                  ],
+                  "columns": ["username"],
                   "name": "Planner_username_key",
                   "unique": true
                 }
               ],
               "primaryKey": {
-                "columns": [
-                  "id"
-                ],
+                "columns": ["id"],
                 "name": "Planner_pkey"
               },
               "uniques": []
@@ -2149,16 +1888,12 @@
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "plannerId"
-                    ],
+                    "columns": ["plannerId"],
                     "namespaceId": "public",
                     "tableName": "PlannerSession"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "Planner"
                   }
@@ -2166,30 +1901,29 @@
               ],
               "indexes": [
                 {
-                  "columns": [
-                    "plannerId"
-                  ],
+                  "columns": ["plannerId"],
                   "name": "PlannerSession_plannerId_idx",
                   "unique": false
                 },
                 {
-                  "columns": [
-                    "tokenHash"
-                  ],
+                  "columns": ["tokenHash"],
                   "name": "PlannerSession_tokenHash_key",
                   "unique": true
                 }
               ],
               "primaryKey": {
-                "columns": [
-                  "id"
-                ],
+                "columns": ["id"],
                 "name": "PlannerSession_pkey"
               },
               "uniques": []
             },
             "Trip": {
               "columns": {
+                "accessCodeEncrypted": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
                 "accessCodeHash": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
@@ -2306,16 +2040,12 @@
                   "onDelete": "setNull",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "chosenContributionId"
-                    ],
+                    "columns": ["chosenContributionId"],
                     "namespaceId": "public",
                     "tableName": "Trip"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "ContributionOption"
                   }
@@ -2325,16 +2055,12 @@
                   "onDelete": "setNull",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "chosenDateId"
-                    ],
+                    "columns": ["chosenDateId"],
                     "namespaceId": "public",
                     "tableName": "Trip"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "DateOption"
                   }
@@ -2344,16 +2070,12 @@
                   "onDelete": "setNull",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "chosenDestinationId"
-                    ],
+                    "columns": ["chosenDestinationId"],
                     "namespaceId": "public",
                     "tableName": "Trip"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "DestinationOption"
                   }
@@ -2361,18 +2083,12 @@
                 {
                   "name": "Trip_contribution_same_trip",
                   "source": {
-                    "columns": [
-                      "id",
-                      "chosenContributionId"
-                    ],
+                    "columns": ["id", "chosenContributionId"],
                     "namespaceId": "public",
                     "tableName": "Trip"
                   },
                   "target": {
-                    "columns": [
-                      "tripId",
-                      "id"
-                    ],
+                    "columns": ["tripId", "id"],
                     "namespaceId": "public",
                     "tableName": "ContributionOption"
                   }
@@ -2380,18 +2096,12 @@
                 {
                   "name": "Trip_date_same_trip",
                   "source": {
-                    "columns": [
-                      "id",
-                      "chosenDateId"
-                    ],
+                    "columns": ["id", "chosenDateId"],
                     "namespaceId": "public",
                     "tableName": "Trip"
                   },
                   "target": {
-                    "columns": [
-                      "tripId",
-                      "id"
-                    ],
+                    "columns": ["tripId", "id"],
                     "namespaceId": "public",
                     "tableName": "DateOption"
                   }
@@ -2399,18 +2109,12 @@
                 {
                   "name": "Trip_destination_same_trip",
                   "source": {
-                    "columns": [
-                      "id",
-                      "chosenDestinationId"
-                    ],
+                    "columns": ["id", "chosenDestinationId"],
                     "namespaceId": "public",
                     "tableName": "Trip"
                   },
                   "target": {
-                    "columns": [
-                      "tripId",
-                      "id"
-                    ],
+                    "columns": ["tripId", "id"],
                     "namespaceId": "public",
                     "tableName": "DestinationOption"
                   }
@@ -2423,16 +2127,12 @@
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
-                    "columns": [
-                      "plannerId"
-                    ],
+                    "columns": ["plannerId"],
                     "namespaceId": "public",
                     "tableName": "Trip"
                   },
                   "target": {
-                    "columns": [
-                      "id"
-                    ],
+                    "columns": ["id"],
                     "namespaceId": "public",
                     "tableName": "Planner"
                   }
@@ -2440,24 +2140,18 @@
               ],
               "indexes": [
                 {
-                  "columns": [
-                    "accessCodeHash"
-                  ],
+                  "columns": ["accessCodeHash"],
                   "name": "Trip_accessCodeHash_key",
                   "unique": true
                 },
                 {
-                  "columns": [
-                    "plannerId"
-                  ],
+                  "columns": ["plannerId"],
                   "name": "Trip_plannerId_idx",
                   "unique": false
                 }
               ],
               "primaryKey": {
-                "columns": [
-                  "id"
-                ],
+                "columns": ["id"],
                 "name": "Trip_pkey"
               },
               "uniques": []
@@ -2466,10 +2160,7 @@
           "valueSet": {
             "TripMode": {
               "kind": "valueSet",
-              "values": [
-                "PLANNING",
-                "PLANNED"
-              ]
+              "values": ["PLANNING", "PLANNED"]
             }
           }
         },
@@ -2477,7 +2168,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "da2b2a73b58c2287fd34c7163560f802c6a78849f3c9978ee8457b3aeac49af4"
+    "storageHash": "e0ea17c377c714eb43c8ae71b31fcf5c67147400e1debcc40cfc66aec3104772"
   },
   "execution": {
     "executionHash": "7b601fc7359b869f90a5b7d88c409dfadb662b151d4d256db5ec56071ee679a2",

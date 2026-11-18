@@ -1,13 +1,7 @@
-import Link from "next/link";
-import { ActionForm, Field } from "@/components/action-form";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { loginAction } from "@/app/actions/auth";
+import Link from 'next/link';
+import { ActionForm, Field } from '@/components/action-form';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { loginAction } from '@/app/actions/auth';
 export default function SignIn() {
   return (
     <div className="auth-wrap">
@@ -36,7 +30,7 @@ export default function SignIn() {
             />
           </ActionForm>
           <p className="mt-6 text-sm">
-            New here?{" "}
+            New here?{' '}
             <Link href="/register" className="text-link">
               Create an account
             </Link>

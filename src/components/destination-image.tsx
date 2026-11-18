@@ -1,13 +1,7 @@
-"use client";
-import { useState } from "react";
-import { MapPin } from "lucide-react";
-export function DestinationImage({
-  url,
-  name,
-}: {
-  url?: string | null;
-  name: string;
-}) {
+'use client';
+import { useState } from 'react';
+import { MapPin } from 'lucide-react';
+export function DestinationImage({ url, name }: { url?: string | null; name: string }) {
   const [failed, setFailed] = useState(false);
   return url && !failed ? (
     // eslint-disable-next-line @next/next/no-img-element -- Fixed-height Blob images use a graceful fallback.

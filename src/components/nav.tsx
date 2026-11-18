@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { Compass } from "lucide-react";
-import { plannerForToken } from "@/lib/auth-service";
-import { plannerToken } from "@/lib/auth";
-import { logoutAction } from "@/app/actions/auth";
-import { Button } from "./ui/button";
+import Link from 'next/link';
+import { Compass } from 'lucide-react';
+import { plannerForToken } from '@/lib/auth-service';
+import { plannerToken } from '@/lib/auth';
+import { logoutAction } from '@/app/actions/auth';
+import { Button } from './ui/button';
 export function Brand() {
   return (
     <Link href="/" className="brand">

@@ -1,7 +1,7 @@
-import { Suspense } from "react";
-import { requirePlanner } from "@/lib/auth";
-import { TripForm } from "@/components/trip-form";
-import { Card, CardContent } from "@/components/ui/card";
+import { Suspense } from 'react';
+import { requirePlanner } from '@/lib/auth';
+import { TripForm } from '@/components/trip-form';
+import { Card, CardContent } from '@/components/ui/card';
 async function NewTrip() {
   await requirePlanner();
   return (

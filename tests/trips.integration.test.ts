@@ -1,7 +1,8 @@
-import { beforeAll, afterAll, expect, test } from "vitest";
-import { db } from "../src/lib/db";
-import { register } from "../src/lib/auth-service";
+import { beforeAll, afterAll, expect, test } from 'vitest';
+import { db } from '../src/lib/db';
+import { register } from '../src/lib/auth-service';
 import {
+  plannerTripCode,
   createTrip,
   editTrip,
   mutateOption,
@@ -13,54 +14,46 @@ import {
   finalizeTrip,
   setPayment,
   readTrip,
-} from "../src/lib/trips";
+} from '../src/lib/trips';
 const enabled = !!process.env.TEST_DATABASE_URL;
 let token: string, other: string;
 const input = {
-  title: "Beach weekend",
-  description: "Friends",
-  timezone: "Asia/Manila",
-  mode: "PLANNING" as const,
+  title: 'Beach weekend',
+  description: 'Friends',
+  timezone: 'Asia/Manila',
+  mode: 'PLANNING' as const,
   contributionsEnabled: true,
-  members: ["Ana", "Ben"],
-  destinations: ["Beach", "Mountains"],
+  members: ['Ana', 'Ben'],
+  destinations: ['Beach', 'Mountains'],
   dates: [
-    { start: "2026-12-01T10:00", end: "2026-12-02T12:00" },
-    { start: "2026-12-08T10:00", end: "2026-12-09T12:00" },
+    { start: '2026-12-01T10:00', end: '2026-12-02T12:00' },
+    { start: '2026-12-08T10:00', end: '2026-12-09T12:00' },
   ],
-  contributions: ["1000.10", "1500.20"],
+  contributions: ['1000.10', '1500.20'],
 };
 beforeAll(async () => {
   if (!enabled) return;
-  await db.orm.public.Planner.where((row)=>row.email.like("%@trips.test")).deleteAll();
-  token = (await register("owner@trips.test", "long enough password")).token;
-  other = (await register("other@trips.test", "long enough password")).token;
+  await db.orm.public.Planner.where((row) => row.email.like('%@trips.test')).deleteAll();
+  token = (await register('owner@trips.test', 'long enough password')).token;
+  other = (await register('other@trips.test', 'long enough password')).token;
 });
 afterAll(async () => {
   await db.close();
 });
 test.skipIf(!enabled)(
-  "creation enforces mode, options, timezone, exact amounts, and ownership",
+  'creation enforces mode, options, timezone, exact amounts, and ownership',
   async () => {
-    await expect(
-      createTrip(token, { ...input, destinations: ["One"] }),
-    ).rejects.toThrow();
-    await expect(
-      createTrip(token, { ...input, timezone: "Nowhere/Invalid" }),
-    ).rejects.toThrow();
-    await expect(
-      createTrip(token, { ...input, members: ["Ana", "Ana"] }),
-    ).rejects.toThrow();
+    await expect(createTrip(token, { ...input, destinations: ['One'] })).rejects.toThrow();
+    await expect(createTrip(token, { ...input, timezone: 'Nowhere/Invalid' })).rejects.toThrow();
+    await expect(createTrip(token, { ...input, members: ['Ana', 'Ana'] })).rejects.toThrow();
     const { trip } = await createTrip(token, input);
-    await expect(
-      editTrip(other, trip.id, { title: "Stolen" }),
-    ).rejects.toThrow();
+    await expect(editTrip(other, trip.id, { title: 'Stolen' })).rejects.toThrow();
     const direct = await createTrip(token, {
       ...input,
-      mode: "PLANNED",
+      mode: 'PLANNED',
       contributionsEnabled: false,
       contributions: [],
-      destinations: ["Beach"],
+      destinations: ['Beach'],
       dates: [input.dates[0]],
     });
     expect(direct.trip.chosenDestinationId).toBeTruthy();
@@ -76,88 +69,72 @@ test.skipIf(!enabled)(
   },
 );
 test.skipIf(!enabled)(
-  "viewer access, concurrent claims, vote replacement, ties, finalization, and payments",
+  'viewer access, concurrent claims, vote replacement, ties, finalization, and payments',
   async () => {
     const { trip, code } = await createTrip(token, input);
     const access = await redeemCode(code);
     await expect(readTrip(trip.id, {})).rejects.toThrow();
-    expect(
-      (await readTrip(trip.id, { viewerToken: access.viewerToken })).title,
-    ).toBe("Beach weekend");
+    expect((await readTrip(trip.id, { viewerToken: access.viewerToken })).title).toBe(
+      'Beach weekend',
+    );
     await expect(
       castVote(
         { viewerToken: access.viewerToken },
         trip.id,
-        "destination",
+        'destination',
         trip.destinations[0].id,
       ),
     ).rejects.toThrow();
     const claims = await Promise.allSettled([
-      claimMember(
-        { viewerToken: access.viewerToken },
-        trip.id,
-        trip.members[0].id,
-      ),
-      claimMember(
-        { viewerToken: access.viewerToken },
-        trip.id,
-        trip.members[0].id,
-      ),
+      claimMember({ viewerToken: access.viewerToken }, trip.id, trip.members[0].id),
+      claimMember({ viewerToken: access.viewerToken }, trip.id, trip.members[0].id),
     ]);
-    expect(claims.filter((c) => c.status === "fulfilled")).toHaveLength(1);
-    const claim = claims.find(
-      (c) => c.status === "fulfilled",
-    ) as PromiseFulfilledResult<{ token: string; expiresAt: Date }>;
+    expect(claims.filter((c) => c.status === 'fulfilled')).toHaveLength(1);
+    const claim = claims.find((c) => c.status === 'fulfilled') as PromiseFulfilledResult<{
+      token: string;
+      expiresAt: Date;
+    }>;
     const identity = {
       viewerToken: access.viewerToken,
       memberToken: claim.value.token,
     };
     const foreign = await createTrip(token, input);
     await expect(
-      castVote(
-        identity,
-        trip.id,
-        "destination",
-        foreign.trip.destinations[0].id,
-      ),
+      castVote(identity, trip.id, 'destination', foreign.trip.destinations[0].id),
     ).rejects.toThrow();
-    await castVote(identity, trip.id, "destination", trip.destinations[0].id);
-    await castVote(identity, trip.id, "destination", trip.destinations[1].id);
+    await castVote(identity, trip.id, 'destination', trip.destinations[0].id);
+    await castVote(identity, trip.id, 'destination', trip.destinations[1].id);
     expect(
-      (await db.orm.public.Member.where({ id: trip.members[0].id }).firstOrThrow())
-        .destinationVoteId,
+      (
+        await db.orm.public.Member.where({
+          id: trip.members[0].id,
+        }).firstOrThrow()
+      ).destinationVoteId,
     ).toBe(trip.destinations[1].id);
     await expect(finalizeTrip(token, trip.id, {})).rejects.toThrow();
-    expect(
-      (await db.orm.public.Trip.where({ id: trip.id }).firstOrThrow()).mode,
-    ).toBe("PLANNING");
+    expect((await db.orm.public.Trip.where({ id: trip.id }).firstOrThrow()).mode).toBe('PLANNING');
     await finalizeTrip(token, trip.id, {
       date: trip.dates[0].id,
       contribution: trip.contributions[0].id,
     });
     await expect(
-      castVote(identity, trip.id, "destination", trip.destinations[0].id),
+      castVote(identity, trip.id, 'destination', trip.destinations[0].id),
     ).rejects.toThrow();
-    await setPayment(token, trip.id, trip.members[0].id, "1200.25");
-    await expect(
-      setPayment(other, trip.id, trip.members[0].id, "1"),
-    ).rejects.toThrow();
-    await expect(
-      setPayment(token, trip.id, trip.members[0].id, "-1"),
-    ).rejects.toThrow();
+    await setPayment(token, trip.id, trip.members[0].id, '1200.25');
+    await expect(setPayment(other, trip.id, trip.members[0].id, '1')).rejects.toThrow();
+    await expect(setPayment(token, trip.id, trip.members[0].id, '-1')).rejects.toThrow();
     await editTrip(token, trip.id, { contributionsEnabled: false });
     expect(
       (
-        await db.orm.public.Member.where({ id: trip.members[0].id }).firstOrThrow()
+        await db.orm.public.Member.where({
+          id: trip.members[0].id,
+        }).firstOrThrow()
       ).amountPaid,
-    ).toBe("1200.25");
+    ).toBe('1200.25');
     expect(
-      (await db.orm.public.Trip.where({ id: trip.id }).firstOrThrow())
-        .chosenContributionId,
+      (await db.orm.public.Trip.where({ id: trip.id }).firstOrThrow()).chosenContributionId,
     ).toBeNull();
-    await expect(
-      setPayment(token, trip.id, trip.members[0].id, "1"),
-    ).rejects.toThrow();
+    await expect(setPayment(token, trip.id, trip.members[0].id, '1')).rejects.toThrow();
     await editTrip(token, trip.id, {
       contributionsEnabled: true,
       contributionId: trip.contributions[1].id,
@@ -165,7 +142,7 @@ test.skipIf(!enabled)(
   },
 );
 test.skipIf(!enabled)(
-  "claim reset, option deletion, and access rotation revoke stale capabilities",
+  'claim reset, option deletion, and access rotation revoke stale capabilities',
   async () => {
     const { trip, code } = await createTrip(token, input);
     const access = await redeemCode(code);
@@ -178,24 +155,21 @@ test.skipIf(!enabled)(
       viewerToken: access.viewerToken,
       memberToken: claim.token,
     };
-    await castVote(identity, trip.id, "destination", trip.destinations[0].id);
-    await mutateOption(token, trip.id, "destination", "add", { name: "City" });
-    await mutateOption(token, trip.id, "destination", "delete", {
+    await castVote(identity, trip.id, 'destination', trip.destinations[0].id);
+    await mutateOption(token, trip.id, 'destination', 'add', { name: 'City' });
+    await mutateOption(token, trip.id, 'destination', 'delete', {
       id: trip.destinations[0].id,
     });
     expect(
-      (await db.orm.public.Member.where({ id: trip.members[0].id }).firstOrThrow())
-        .destinationVoteId,
+      (
+        await db.orm.public.Member.where({
+          id: trip.members[0].id,
+        }).firstOrThrow()
+      ).destinationVoteId,
     ).toBeNull();
-    await mutateMember(token, trip.id, "reset", { id: trip.members[0].id });
-    await expect(
-      castVote(identity, trip.id, "date", trip.dates[0].id),
-    ).rejects.toThrow();
-    await claimMember(
-      { viewerToken: access.viewerToken },
-      trip.id,
-      trip.members[0].id,
-    );
+    await mutateMember(token, trip.id, 'reset', { id: trip.members[0].id });
+    await expect(castVote(identity, trip.id, 'date', trip.dates[0].id)).rejects.toThrow();
+    await claimMember({ viewerToken: access.viewerToken }, trip.id, trip.members[0].id);
     const fresh = await rotateCode(token, trip.id);
     await expect(redeemCode(code)).rejects.toThrow();
     await expect(readTrip(trip.id, identity)).rejects.toThrow();
@@ -203,64 +177,63 @@ test.skipIf(!enabled)(
   },
 );
 test.skipIf(!enabled)(
-  "database constraints reject cross-trip votes and invalid money/windows",
+  'database constraints reject cross-trip votes and invalid money/windows',
   async () => {
     const a = await createTrip(token, input),
       b = await createTrip(token, input);
     await expect(
-      db.orm.public.Member.where({ id: a.trip.members[0].id }).update({ destinationVoteId: b.trip.destinations[0].id }),
+      db.orm.public.Member.where({ id: a.trip.members[0].id }).update({
+        destinationVoteId: b.trip.destinations[0].id,
+      }),
     ).rejects.toThrow();
     await expect(
-      db.orm.public.Member.where({ id: a.trip.members[0].id }).update({ amountPaid: "-1" }),
+      db.orm.public.Member.where({ id: a.trip.members[0].id }).update({
+        amountPaid: '-1',
+      }),
     ).rejects.toThrow();
     await expect(
       db.orm.public.DateOption.create({
-          tripId: a.trip.id,
-          start: new Date("2026-12-02"),
-          end: new Date("2026-12-01"),
-        }),
-    ).rejects.toThrow();
-  },
-);
-test.skipIf(!enabled)(
-  "finalization races cannot leave a later vote",
-  async () => {
-    const { trip, code } = await createTrip(token, input);
-    const viewer = await redeemCode(code);
-    const member = await claimMember(
-      { viewerToken: viewer.viewerToken },
-      trip.id,
-      trip.members[0].id,
-    );
-    await Promise.allSettled([
-      finalizeTrip(token, trip.id, {
-        destination: trip.destinations[0].id,
-        date: trip.dates[0].id,
-        contribution: trip.contributions[0].id,
+        tripId: a.trip.id,
+        start: new Date('2026-12-02'),
+        end: new Date('2026-12-01'),
       }),
-      castVote(
-        { viewerToken: viewer.viewerToken, memberToken: member.token },
-        trip.id,
-        "destination",
-        trip.destinations[1].id,
-      ),
-    ]);
-    expect(
-      (await db.orm.public.Trip.where({ id: trip.id }).firstOrThrow()).mode,
-    ).toBe("PLANNED");
-    await expect(
-      castVote(
-        { viewerToken: viewer.viewerToken, memberToken: member.token },
-        trip.id,
-        "date",
-        trip.dates[1].id,
-      ),
     ).rejects.toThrow();
   },
 );
+test.skipIf(!enabled)('finalization races cannot leave a later vote', async () => {
+  const { trip, code } = await createTrip(token, input);
+  const viewer = await redeemCode(code);
+  const member = await claimMember(
+    { viewerToken: viewer.viewerToken },
+    trip.id,
+    trip.members[0].id,
+  );
+  await Promise.allSettled([
+    finalizeTrip(token, trip.id, {
+      destination: trip.destinations[0].id,
+      date: trip.dates[0].id,
+      contribution: trip.contributions[0].id,
+    }),
+    castVote(
+      { viewerToken: viewer.viewerToken, memberToken: member.token },
+      trip.id,
+      'destination',
+      trip.destinations[1].id,
+    ),
+  ]);
+  expect((await db.orm.public.Trip.where({ id: trip.id }).firstOrThrow()).mode).toBe('PLANNED');
+  await expect(
+    castVote(
+      { viewerToken: viewer.viewerToken, memberToken: member.token },
+      trip.id,
+      'date',
+      trip.dates[1].id,
+    ),
+  ).rejects.toThrow();
+});
 
 test.skipIf(!enabled)(
-  "Planned corrections can select existing owned options and reject foreign choices",
+  'Planned corrections can select existing owned options and reject foreign choices',
   async () => {
     const { trip } = await createTrip(token, input),
       foreign = await createTrip(token, input);
@@ -281,9 +254,29 @@ test.skipIf(!enabled)(
       destinationId: trip.destinations[1].id,
       dateId: trip.dates[1].id,
     });
-    const changed = await db.orm.public.Trip.where({ id: trip.id }).firstOrThrow();
-    expect(changed.mode).toBe("PLANNED");
+    const changed = await db.orm.public.Trip.where({
+      id: trip.id,
+    }).firstOrThrow();
+    expect(changed.mode).toBe('PLANNED');
     expect(changed.chosenDestinationId).toBe(trip.destinations[1].id);
     expect(changed.chosenDateId).toBe(trip.dates[1].id);
+  },
+);
+
+test.skipIf(!enabled)(
+  'only the owner can retrieve the saved current code across rotation',
+  async () => {
+    const { trip, code } = await createTrip(token, input);
+    expect(await plannerTripCode(token, trip.id)).toBe(code);
+    await expect(plannerTripCode(other, trip.id)).rejects.toThrow();
+    await expect(plannerTripCode(undefined, trip.id)).rejects.toThrow();
+    const replacement = await rotateCode(token, trip.id);
+    expect(await plannerTripCode(token, trip.id)).toBe(replacement);
+    await expect(redeemCode(code)).rejects.toThrow();
+    expect((await redeemCode(replacement)).tripId).toBe(trip.id);
+    await db.orm.public.Trip.where({ id: trip.id }).update({
+      accessCodeEncrypted: null,
+    });
+    expect(await plannerTripCode(token, trip.id)).toBeNull();
   },
 );

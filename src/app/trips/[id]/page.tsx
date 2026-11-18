@@ -1,10 +1,10 @@
-import { Suspense } from "react";
-import Link from "next/link";
-import { readTrip, currentMember } from "@/lib/trips";
-import { identity } from "@/lib/auth";
-import { UserError } from "@/lib/validation";
-import { TripView } from "@/components/trip-view";
-import { AccessGate } from "@/components/access-gate";
+import { Suspense } from 'react';
+import Link from 'next/link';
+import { readTrip, currentMember } from '@/lib/trips';
+import { identity } from '@/lib/auth';
+import { UserError } from '@/lib/validation';
+import { TripView } from '@/components/trip-view';
+import { AccessGate } from '@/components/access-gate';
 async function TripPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const who = await identity(id);
@@ -18,7 +18,7 @@ async function TripPage({ params }: { params: Promise<{ id: string }> }) {
   const member = await currentMember(id, who);
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {trip.mode === "PLANNING" && !member && (
+      {trip.mode === 'PLANNING' && !member && (
         <Link className="text-link text-sm" href={`/trips/${id}/entry`}>
           Join as a member →
         </Link>

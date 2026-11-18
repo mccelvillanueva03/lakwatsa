@@ -19,7 +19,7 @@ Configure `.env.local`:
 - `ACCESS_COOKIE_SECRET`: at least 32 random characters. Generate with `openssl rand -hex 32`.
 - `BLOB_READ_WRITE_TOKEN`: token for a **public** Vercel Blob store. Images are public to anyone with their unpredictable URL; avoid sensitive photos. Uploads require this token; other trip features do not.
 - `TEST_DATABASE_URL`: a separate disposable Postgres database for integration tests. Never point this at production.
-    
+
 Prisma CLI does not load `.env.local` automatically. Export `DATABASE_URL` in your shell when running its commands (or use a git-ignored `.env` for Prisma). Next.js loads `.env.local` when running the app.
 
 ```sh
@@ -79,7 +79,7 @@ npm run test:e2e
 Vitest uses `TEST_DATABASE_URL` instead of `DATABASE_URL` when supplied. Playwright's local server uses `DATABASE_URL`. Integration tests clean only their reserved fixture email domains; browser tests create uniquely named fixtures and retain them for inspection. Destroy or reset the disposable database when finished. Do not run against a database containing real users.
 
 Browser acceptance runs at iPhone-sized and desktop Chromium widths. It covers registration, Planning creation, separate member entry and claiming, voting, finalization with explicit unvoted-category decisions, exact payment updates, and direct Planned creation without contributions. Additional checks cover invalid invitations, protected-page access, server-error field retention, and automatic vote refresh. Failure traces and screenshots live under ignored `test-results/`.
- 
+
 Blob tests replace only the external Blob transport, keeping real database writes, authorization, file validation, and cleanup ordering. A real upload with your Blob token is still needed to verify that store's configuration.
 
 ## Access and data rules
@@ -109,3 +109,9 @@ Design: [MVP spec](docs/superpowers/specs/2026-10-23-trip-lang-mvp-design.md). E
 Dependency note: the CLI and runtime use independently versioned v8 releases. The `@prisma/orm-toolchain` override aligns their contract-authoring registries at rc.22; without it these releases fail contract inference. Revalidate this override when upgrading either release. The scoped Zod override remains for the Blob dependency tree. `npm run build` emits contract artifacts before compiling; it does not apply migrations.
 
 The current lockfile has no runtime dependency advisories (`npm audit --omit=dev`), but the full audit reports 32 development-tool advisories (24 moderate, 8 high), including Prisma CLI bundled tooling. Compatible audit fixes did not clear these; do not use `npm audit fix --force` to silently downgrade the approved v8 target.
+
+### Reusable trip invitations
+
+New trips and regenerated invitations save an AES-256-GCM encrypted copy of the current code. Only the owning planner can retrieve it, from the manage page or dashboard sharing button. The existing hash remains the lookup for invitation redemption. Keep `ACCESS_COOKIE_SECRET` stable: it also derives the encryption key for saved codes.
+
+Apply the `save_trip_codes` migration before deploying this change. It adds one nullable column and preserves existing trips. Older codes cannot be recovered from hashes; those trips show a one-time regeneration option. Regeneration continues to revoke the previous code and existing visitor access.

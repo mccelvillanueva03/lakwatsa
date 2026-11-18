@@ -5,7 +5,4 @@ export type FormState = {
   code?: string;
   tripId?: string;
 };
-export type FormAction = (
-  state: FormState,
-  form: FormData,
-) => Promise<FormState>;
+export type FormAction = (state: FormState, form: FormData) => Promise<FormState>;
