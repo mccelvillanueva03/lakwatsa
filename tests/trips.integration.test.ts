@@ -90,12 +90,12 @@ test.skipIf(!enabled)(
     ).rejects.toThrow();
     const claims = await Promise.allSettled([
       claimMember(
-        { viewerToken: access.viewerToken, plannerToken: token },
+        { viewerToken: access.viewerToken, plannerToken: other },
         trip.id,
         trip.members[0].id,
       ),
       claimMember(
-        { viewerToken: access.viewerToken, plannerToken: token },
+        { viewerToken: access.viewerToken, plannerToken: other },
         trip.id,
         trip.members[0].id,
       ),
@@ -158,7 +158,7 @@ test.skipIf(!enabled)(
     const { trip, code } = await createTrip(token, input);
     const access = await redeemCode(code);
     const claim = await claimMember(
-      { viewerToken: access.viewerToken, plannerToken: token },
+      { viewerToken: access.viewerToken, plannerToken: other },
       trip.id,
       trip.members[0].id,
     );
@@ -181,7 +181,7 @@ test.skipIf(!enabled)(
     await mutateMember(token, trip.id, 'reset', { id: trip.members[0].id });
     await expect(castVote(identity, trip.id, 'date', trip.dates[0].id)).rejects.toThrow();
     await claimMember(
-      { viewerToken: access.viewerToken, plannerToken: token },
+      { viewerToken: access.viewerToken, plannerToken: other },
       trip.id,
       trip.members[0].id,
     );
@@ -219,7 +219,7 @@ test.skipIf(!enabled)('finalization races cannot leave a later vote', async () =
   const { trip, code } = await createTrip(token, input);
   const viewer = await redeemCode(code);
   const member = await claimMember(
-    { viewerToken: viewer.viewerToken, plannerToken: token },
+    { viewerToken: viewer.viewerToken, plannerToken: other },
     trip.id,
     trip.members[0].id,
   );
