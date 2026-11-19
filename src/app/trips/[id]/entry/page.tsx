@@ -2,7 +2,8 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { readTrip, currentMember } from '@/lib/trips';
-import { identity } from '@/lib/auth';
+import { identity, plannerToken } from '@/lib/auth';
+import { plannerForToken } from '@/lib/auth-service';
 import { UserError } from '@/lib/validation';
 import { claimAction } from '@/app/actions/access';
 import { ActionForm, SelectField } from '@/components/action-form';
@@ -20,9 +21,11 @@ async function Entry({ params }: { params: Promise<{ id: string }> }) {
     throw e;
   }
   if (trip.mode === 'PLANNED') redirect(`/trips/${id}`);
+  const planner = await plannerForToken(await plannerToken());
   const member = await currentMember(id, who);
   if (member) redirect(`/trips/${id}`);
   const available = trip.members.filter((m) => !m.session || m.session.expiresAt <= new Date());
+  const returnTo = `/trips/${id}/entry`;
   return (
     <div className="auth-wrap">
       <p className="eyebrow mb-4">YOU’RE INVITED</p>
@@ -32,7 +35,23 @@ async function Entry({ params }: { params: Promise<{ id: string }> }) {
           <CardDescription>Find your name and help shape the plan.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {available.length ? (
+          {!planner ? (
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Create an account or sign in before claiming a member name.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button asChild>
+                  <Link href={`/register?returnTo=${encodeURIComponent(returnTo)}`}>
+                    Create account
+                  </Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href={`/sign-in?returnTo=${encodeURIComponent(returnTo)}`}>Sign in</Link>
+                </Button>
+              </div>
+            </div>
+          ) : available.length ? (
             <ActionForm action={claimAction.bind(null, id)} submit="Join as member">
               <SelectField name="memberId" label="Your name">
                 <option value="">Choose your name</option>

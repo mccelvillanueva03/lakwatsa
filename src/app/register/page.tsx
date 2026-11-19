@@ -2,7 +2,17 @@ import Link from 'next/link';
 import { ActionForm, Field } from '@/components/action-form';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { registerAction } from '@/app/actions/auth';
-export default function Register() {
+import { Hidden } from '@/components/action-form';
+export default async function Register({
+  searchParams,
+}: {
+  searchParams: Promise<{ returnTo?: string }>;
+}) {
+  const params = await searchParams;
+  const returnTo =
+    params.returnTo?.startsWith('/trips/') && params.returnTo.endsWith('/entry')
+      ? params.returnTo
+      : '/dashboard';
   return (
     <div className="auth-wrap">
       <p className="eyebrow mb-4">FIRST STOP: YOUR NEXT ADVENTURE</p>
@@ -15,6 +25,7 @@ export default function Register() {
         </CardHeader>
         <CardContent>
           <ActionForm action={registerAction} submit="Create account">
+            <Hidden name="returnTo" value={returnTo} />
             <Field
               name="email"
               label="Email"
