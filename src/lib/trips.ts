@@ -271,6 +271,7 @@ export async function claimMember(identity: Identity, id: string, memberId: stri
   return transaction(async (tx) => {
     const trip = await lockedTrip(tx, id);
     await canRead(tx, identity, trip);
+    await requirePlannerToken(identity.plannerToken, tx);
     if (trip.mode !== 'PLANNING') throw new UserError('Voting is closed.');
     const member = trip.members.find((m) => m.id === memberId);
     if (!member) throw new UserError('Choose an available member.', 'member');

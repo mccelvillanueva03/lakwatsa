@@ -6,6 +6,9 @@ import { register, login, logout, updateAccount } from '@/lib/auth-service';
 import { plannerToken, setPlannerCookie } from '@/lib/auth';
 import { actionError } from '@/lib/action-errors';
 import type { FormState } from '@/lib/form-state';
+function safeReturnTo(value: string) {
+  return value.startsWith('/trips/') && value.endsWith('/entry') ? value : '/dashboard';
+}
 export async function registerAction(_: FormState, form: FormData): Promise<FormState> {
   try {
     const session = await register(
@@ -16,7 +19,7 @@ export async function registerAction(_: FormState, form: FormData): Promise<Form
   } catch (e) {
     return actionError(e);
   }
-  redirect('/dashboard');
+  redirect(safeReturnTo(String(form.get('returnTo') || '')));
 }
 export async function loginAction(_: FormState, form: FormData): Promise<FormState> {
   try {
@@ -28,7 +31,7 @@ export async function loginAction(_: FormState, form: FormData): Promise<FormSta
   } catch (e) {
     return actionError(e);
   }
-  redirect('/dashboard');
+  redirect(safeReturnTo(String(form.get('returnTo') || '')));
 }
 export async function logoutAction() {
   await logout(await plannerToken());

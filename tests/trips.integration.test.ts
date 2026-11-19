@@ -85,9 +85,20 @@ test.skipIf(!enabled)(
         trip.destinations[0].id,
       ),
     ).rejects.toThrow();
+    await expect(
+      claimMember({ viewerToken: access.viewerToken }, trip.id, trip.members[0].id),
+    ).rejects.toThrow();
     const claims = await Promise.allSettled([
-      claimMember({ viewerToken: access.viewerToken }, trip.id, trip.members[0].id),
-      claimMember({ viewerToken: access.viewerToken }, trip.id, trip.members[0].id),
+      claimMember(
+        { viewerToken: access.viewerToken, plannerToken: other },
+        trip.id,
+        trip.members[0].id,
+      ),
+      claimMember(
+        { viewerToken: access.viewerToken, plannerToken: other },
+        trip.id,
+        trip.members[0].id,
+      ),
     ]);
     expect(claims.filter((c) => c.status === 'fulfilled')).toHaveLength(1);
     const claim = claims.find((c) => c.status === 'fulfilled') as PromiseFulfilledResult<{
@@ -147,7 +158,7 @@ test.skipIf(!enabled)(
     const { trip, code } = await createTrip(token, input);
     const access = await redeemCode(code);
     const claim = await claimMember(
-      { viewerToken: access.viewerToken },
+      { viewerToken: access.viewerToken, plannerToken: other },
       trip.id,
       trip.members[0].id,
     );
@@ -169,7 +180,11 @@ test.skipIf(!enabled)(
     ).toBeNull();
     await mutateMember(token, trip.id, 'reset', { id: trip.members[0].id });
     await expect(castVote(identity, trip.id, 'date', trip.dates[0].id)).rejects.toThrow();
-    await claimMember({ viewerToken: access.viewerToken }, trip.id, trip.members[0].id);
+    await claimMember(
+      { viewerToken: access.viewerToken, plannerToken: other },
+      trip.id,
+      trip.members[0].id,
+    );
     const fresh = await rotateCode(token, trip.id);
     await expect(redeemCode(code)).rejects.toThrow();
     await expect(readTrip(trip.id, identity)).rejects.toThrow();
@@ -204,7 +219,7 @@ test.skipIf(!enabled)('finalization races cannot leave a later vote', async () =
   const { trip, code } = await createTrip(token, input);
   const viewer = await redeemCode(code);
   const member = await claimMember(
-    { viewerToken: viewer.viewerToken },
+    { viewerToken: viewer.viewerToken, plannerToken: other },
     trip.id,
     trip.members[0].id,
   );

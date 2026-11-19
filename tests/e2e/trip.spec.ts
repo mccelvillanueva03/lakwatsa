@@ -43,6 +43,14 @@ test('planner creates, member claims and votes, planner finalizes and records ex
   const member = await memberContext.newPage();
   await member.goto(`/invite?code=${code}`);
   await expect(member).toHaveURL(/entry/);
+  await expect(member.getByRole('button', { name: 'Join as member' })).toHaveCount(0);
+  await expect(member.getByRole('link', { name: 'Create account' })).toBeVisible();
+  await member.getByRole('link', { name: 'Create account' }).click();
+  await expect(member).toHaveURL(/register\?returnTo=/);
+  await member.getByLabel('Email').fill(`member-${Date.now()}-${info.project.name}@e2e.test`);
+  await member.getByLabel('Password', { exact: true }).fill('my excellent member password');
+  await member.getByRole('button', { name: 'Create account' }).click();
+  await expect(member).toHaveURL(/entry/);
   await member.getByLabel('Your name').selectOption({ label: 'Ana' });
   await member.getByRole('button', { name: 'Join as member' }).click();
   await page.goto(manage!);

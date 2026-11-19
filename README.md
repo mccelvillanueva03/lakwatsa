@@ -2,7 +2,7 @@
 
 A mobile-friendly group trip planner built with Next.js 16.4.2, React 19.3, Prisma/Postgres, shadcn/ui, and Vercel Blob.
 
-A planner creates a **Planning** trip with changeable member votes, or a **Planned** trip with settled details. Friends use a private code without creating accounts. Planners resolve ties, finalize the plan, and record exact cumulative payments.
+A planner creates a **Planning** trip with changeable member votes, or a **Planned** trip with settled details. Friends use a private code to view the trip without an account; claiming a member name requires an account. Planners resolve ties, finalize the plan, and record exact cumulative payments.
 
 ## Run locally
 
@@ -87,7 +87,7 @@ Blob tests replace only the external Blob transport, keeping real database write
 - Passwords use salted scrypt. Database planner/member sessions contain only SHA-256 token hashes; browser cookies are HttpOnly, SameSite=Lax, and Secure in production.
 - Planner and member sessions last 30 days. Viewer access is HMAC-signed, trip-specific, versioned, and lasts 7 days. Signing-secret rotation revokes all viewer access.
 - An invite immediately redirects to a clean path. Access codes have 60 bits of randomness; only hashes are saved. Save the code/link when it appears. Generating another revokes the previous code and existing visitor access, including voting until the new code is entered.
-- Anyone holding a code can see member names, selections, vote totals, and exact payments. Only the planner can edit the plan or payments. Only claimed members can vote while Planning.
+- Anyone holding a code can see member names, selections, vote totals, and exact payments without an account. Claiming a member name requires a signed-in account. Only the planner can edit the plan or payments. Only claimed members can vote while Planning.
 - A name has one active claimed browser. If someone clears cookies or changes devices, the planner can reset that claim. Codes alone cannot take over a claim.
 - Finalization is one-way. Unique winners are automatic; ties and no-vote categories require a planner choice. Mutations lock the trip in serializable transactions and retry serialization conflicts. Open, visible trip pages refresh every 10 seconds to update votes and payments.
 - Postgres enforces same-trip option references, unique options/member names, positive contribution targets, nonnegative payments, and valid date windows. Options removed while Planning clear affected votes.
